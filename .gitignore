@@ -1,0 +1,67 @@
+#############################
+#   BACKEND - SPRING BOOT   #
+#############################
+
+# Maven build
+proyectoTurnosMedicos/target/
+proyectoTurnosMedicos/.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+proyectoTurnosMedicos/logs/
+
+# Java / JVM
+*.class
+*.jar
+*.war
+*.ear
+
+# IDEs
+*.iml
+*.ipr
+*.iws
+.idea/
+.eclipse/
+.project
+.classpath
+.settings/
+
+# OS temp files
+.DS_Store
+Thumbs.db
+
+
+#############################
+#   FRONTEND - ANGULAR      #
+#############################
+
+# Node dependencies
+turnos_medicos_front2/node_modules/
+
+# Angular build
+turnos_medicos_front2/dist/
+turnos_medicos_front2/out-tsc/
+
+# Angular cache
+turnos_medicos_front2/.angular/
+
+# Logs
+turnos_medicos_front2/npm-debug.log
+turnos_medicos_front2/yarn-error.log
+turnos_medicos_front2/package-lock.json
+turnos_medicos_front2/pnpm-lock.yaml
+
+
+#############################
+#    OTHER SYSTEM FILES     #
+#############################
+
+# Windows
+desktop.ini
+
+# macOS
+.DS_Store
+
+# Environment / secrets
+.env
+*.env
