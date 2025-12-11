@@ -7,10 +7,12 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PacienteDto {
     private Long id;
+    @NotNull(message = "campo Dni no puede ser nulo")
+    private String dni;
     @NotNull(message = "campo nombre no puede ser nulo")
     private String nombre;
     @NotNull(message = "campo apellido no puede ser nulo")
-    private String Apellido;
+    private String apellido;
     @NotNull(message = "campo direccion no puede ser nulo")
     private String direccion;
     /*ESTE VA SOLO EN LA ENTIDAD USUARIO

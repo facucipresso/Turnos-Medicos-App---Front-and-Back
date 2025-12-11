@@ -14,6 +14,6 @@ public class ReservaDto {
     private String nombrePaciente;
     private String apellidoPaciente;
     private String apellidoMedico;
-    private String especialidadMedico;
+    //private String especialidadMedico;
     private String nombreObraSocial;
 }

@@ -116,4 +116,26 @@ public class AuthServiceImpl implements AuthService{
                 .email(user.getEmail())
                 .rol(user.getRol()).build();
     }
+
+    @Override
+    public AuthResponse registerRecepcionista(AuthenticationRequest request) {
+        if(usuarioRepository.findUserByEmail(request.getEmail()).isPresent()){
+            throw new BadRequestException("Email ya ingresado, no se lo puede registrar");
+        }
+
+        var usuario = Usuario.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .rol(Rol.RECEPCIONISTA)
+                .build();
+
+        usuarioRepository.save(usuario);
+
+        var jwtToken = jwtService.generateToken(usuario);
+
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .idUsuario((usuario.getId()))
+                .email(request.getEmail())
+                .rol(Rol.RECEPCIONISTA).build();    }
 }

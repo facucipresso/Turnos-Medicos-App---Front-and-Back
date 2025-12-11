@@ -1,8 +1,11 @@
 package com.example.proyectoTurnosMedicos.Controller;
 
 
+import com.example.proyectoTurnosMedicos.Entity.DTO.EmailDNIUser;
 import com.example.proyectoTurnosMedicos.Entity.DTO.UsuarioRequestDto;
 import com.example.proyectoTurnosMedicos.Entity.DTO.UsuarioResponseDto;
+import com.example.proyectoTurnosMedicos.Repository.PacienteRepository;
+import com.example.proyectoTurnosMedicos.Service.PacienteService;
 import com.example.proyectoTurnosMedicos.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +16,9 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    PacienteService pacienteService;
 
     //DEPRECADO
     //SOLO REGISTRA A LOS USUARIOS ESTE ENDPOINT
@@ -47,10 +53,17 @@ public class UsuarioController {
         return usuarioService.usuarioLogin(usuarioRequestDto);
     }*/
 
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/usuario/get-id_rol/{id_usuario}")
     public Long getIdDeRolByIdUsuario(@PathVariable Long id_usuario){
         return usuarioService.getIdByUsuarioId(id_usuario);
     }
+
+/*    @PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+    @PostMapping("/usuario/get-idUser")
+    public Long getIdByEmailandDni(@RequestBody EmailDNIUser datosUser){
+        return usuarioService.getIdByUsuarioEmailandDni(datosUser);
+    }*/
+
 
 }

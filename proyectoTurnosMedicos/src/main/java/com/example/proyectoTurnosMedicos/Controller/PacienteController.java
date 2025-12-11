@@ -1,5 +1,6 @@
 package com.example.proyectoTurnosMedicos.Controller;
 
+import com.example.proyectoTurnosMedicos.Entity.DTO.EmailDNIUser;
 import com.example.proyectoTurnosMedicos.Entity.DTO.PacienteDto;
 import com.example.proyectoTurnosMedicos.Entity.Paciente;
 import com.example.proyectoTurnosMedicos.Service.PacienteService;
@@ -53,5 +54,9 @@ public class PacienteController {
         return pacienteService.getPacienteById(id);
     }
 
-
+    @PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+    @PostMapping("/recepcionistas/get-idPaciente")
+    public PacienteDto getIdByEmailandDni(@RequestBody EmailDNIUser datosUser){
+        return pacienteService.getIdByPacienteEmailandDni(datosUser);
+    }
 }

@@ -45,4 +45,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
+    @PostMapping("/register/recepcionista")
+    public ResponseEntity<AuthResponse> registerRecepcionista(@RequestBody AuthenticationRequest request){
+        return ResponseEntity.ok(authService.registerRecepcionista(request));
+    }
+
 }

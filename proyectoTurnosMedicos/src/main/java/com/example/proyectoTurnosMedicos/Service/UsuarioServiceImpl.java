@@ -1,6 +1,7 @@
 package com.example.proyectoTurnosMedicos.Service;
 
 import com.example.proyectoTurnosMedicos.Entity.*;
+import com.example.proyectoTurnosMedicos.Entity.DTO.EmailDNIUser;
 import com.example.proyectoTurnosMedicos.Entity.DTO.UsuarioRequestDto;
 import com.example.proyectoTurnosMedicos.Entity.DTO.UsuarioResponseDto;
 import com.example.proyectoTurnosMedicos.Exception.BadRequestException;
@@ -8,6 +9,7 @@ import com.example.proyectoTurnosMedicos.Exception.ResourceNotFoundException;
 import com.example.proyectoTurnosMedicos.Repository.AdministradorRepository;
 import com.example.proyectoTurnosMedicos.Repository.MedicoRepository;
 import com.example.proyectoTurnosMedicos.Repository.PacienteRepository;
+import com.example.proyectoTurnosMedicos.Repository.RecepcionistaRepository;
 import com.example.proyectoTurnosMedicos.Security.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Autowired
     AdministradorRepository administradorRepository;
+
+    @Autowired
+    RecepcionistaRepository recepcionistaRepository;
 
     //NO VA MAS, ESTA EN EL AUTH CONTROLLER
     /*@Override
@@ -134,8 +139,13 @@ public class UsuarioServiceImpl implements UsuarioService{
         }else if(administradorRepository.findByUsuario_Id(id_usuario).isPresent()){
             Administrador admin = administradorRepository.findByUsuario_Id(id_usuario).orElseThrow(()-> new ResourceNotFoundException("Administrador no encontrado"));
             return admin.getId();
+        }else if(recepcionistaRepository.findByUsuario_Id(id_usuario).isPresent()) {
+        Recepcionista recep = recepcionistaRepository.findByUsuario_Id(id_usuario).orElseThrow(() -> new ResourceNotFoundException("Recepcionista no encontrado"));
+        return recep.getId();
         }else{
             throw new BadRequestException("No se encuentra nada");
         }
     }
+
+
 }

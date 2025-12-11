@@ -82,7 +82,7 @@ public class ReservaServiceImp implements ReservaService{
         rdto.setNombrePaciente(r.getPaciente().getNombre());
         rdto.setApellidoPaciente(r.getPaciente().getApellido());
         rdto.setApellidoMedico(r.getTurno().getMedico().getApellido());
-        rdto.setEspecialidadMedico(r.getTurno().getMedico().getEspecialidad().getNombre());
+        //rdto.setEspecialidadMedico(r.getTurno().getMedico().getEspecialidad().getNombre());
         rdto.setNombreObraSocial(r.getObrasocial().getNombreObraSocial());
 
         return rdto;
@@ -116,7 +116,7 @@ public class ReservaServiceImp implements ReservaService{
             rdto.setNombrePaciente(reserva.getPaciente().getNombre());
             rdto.setApellidoPaciente(reserva.getPaciente().getApellido());
             rdto.setApellidoMedico(reserva.getTurno().getMedico().getApellido());
-            rdto.setEspecialidadMedico(reserva.getTurno().getMedico().getEspecialidad().getNombre());
+            //rdto.setEspecialidadMedico(reserva.getTurno().getMedico().getEspecialidad().getNombre());
             rdto.setNombreObraSocial(reserva.getObrasocial().getNombreObraSocial());
             reservasDtoPaciente.add(rdto);
         }
@@ -136,7 +136,7 @@ public class ReservaServiceImp implements ReservaService{
             rdto.setNombrePaciente(reserva.getPaciente().getNombre());
             rdto.setApellidoPaciente(reserva.getPaciente().getApellido());
             rdto.setApellidoMedico(reserva.getTurno().getMedico().getApellido());
-            rdto.setEspecialidadMedico(reserva.getTurno().getMedico().getEspecialidad().getNombre());
+            //rdto.setEspecialidadMedico(reserva.getTurno().getMedico().getEspecialidad().getNombre());
             rdto.setNombreObraSocial(reserva.getObrasocial().getNombreObraSocial());
             reservasDtoMedico.add(rdto);
         }

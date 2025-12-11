@@ -9,4 +9,5 @@ public interface AuthService {
     AuthResponse registerMedico(AuthenticationRequest request);
     AuthResponse registerAdmin(AuthenticationRequest request);
     AuthResponse authenticate(AuthenticationRequest request);
+    AuthResponse registerRecepcionista(AuthenticationRequest request);
 }

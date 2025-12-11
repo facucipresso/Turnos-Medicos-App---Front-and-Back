@@ -10,7 +10,7 @@ public class AdministradorDto {
     @NotNull(message = "campo nombre no puede ser nulo")
     private String nombre;
     @NotNull(message = "campo apellido no puede ser nulo")
-    private String Apellido;
+    private String apellido;
     @NotNull(message = "campo direccion no puede ser nulo")
     private String direccion;
     @NotNull(message = "campo usuario_id no puede ser nulo")

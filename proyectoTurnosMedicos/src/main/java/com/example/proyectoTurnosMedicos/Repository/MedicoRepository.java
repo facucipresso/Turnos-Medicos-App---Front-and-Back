@@ -14,10 +14,17 @@ import java.util.Optional;
 
 @Repository
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
-    List<Medico> findByEspecialidad(Especialidad especialidad);
+    //List<Medico> findByEspecialidad(Especialidad especialidad);
+
+    List<Medico> findByEspecialidadesContaining(Especialidad especialidad);
+
     @Query("SELECT m FROM Medico m JOIN m.turnos t WHERE t.id = :idTurno")
     Optional<Medico> findByIdTurno(@Param("idTurno") Long idTurno);
     //List<Medico> findMedicosByObraSocial(ObraSocial obraSocial);
     List<Medico> findByObrasSociales_Id(Long obraSocialId);
     Optional<Medico> findByUsuario_Id(Long id_usuario);
+
+    @Query("SELECT m FROM Medico m JOIN m.especialidades e WHERE e.id = :idEspecialidad")
+    List<Medico> buscarPorIdEspecialidad(Long idEspecialidad);
+
 }

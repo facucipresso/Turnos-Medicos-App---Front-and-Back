@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @MappedSuperclass
 public abstract class User {
+
+    /*esto lo tengo que agregar porque no lo tengo*/
+    @Column(nullable = false)
+    public String dni;
+
     @Column(nullable = false)
     public String nombre;
 

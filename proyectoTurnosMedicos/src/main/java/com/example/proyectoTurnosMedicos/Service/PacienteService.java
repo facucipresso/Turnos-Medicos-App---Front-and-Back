@@ -1,5 +1,6 @@
 package com.example.proyectoTurnosMedicos.Service;
 
+import com.example.proyectoTurnosMedicos.Entity.DTO.EmailDNIUser;
 import com.example.proyectoTurnosMedicos.Entity.DTO.PacienteDto;
 import com.example.proyectoTurnosMedicos.Entity.Paciente;
 
@@ -12,5 +13,6 @@ public interface PacienteService {
     List<PacienteDto> findAllPacientes();
     void deletePacienteById(Long id_paciente);
     PacienteDto getPacienteById(Long id);
+    PacienteDto getIdByPacienteEmailandDni(EmailDNIUser emailDNIUser);
 
 }

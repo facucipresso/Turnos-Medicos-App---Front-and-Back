@@ -1,6 +1,7 @@
 package com.example.proyectoTurnosMedicos.Service;
 
 import com.example.proyectoTurnosMedicos.Entity.*;
+import com.example.proyectoTurnosMedicos.Entity.DTO.EmailDNIUser;
 import com.example.proyectoTurnosMedicos.Entity.DTO.PacienteDto;
 import com.example.proyectoTurnosMedicos.Exception.BadRequestException;
 import com.example.proyectoTurnosMedicos.Exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.example.proyectoTurnosMedicos.Security.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class PacienteServiceImp implements PacienteService{
                 orElseThrow(()-> new BadRequestException("Usuario no encontrado"));
 
         Paciente p = new Paciente();
+        p.setDni(pacienteDto.getDni());
         p.setNombre(pacienteDto.getNombre());
         p.setApellido(pacienteDto.getApellido());
         p.setDireccion(pacienteDto.getDireccion());
@@ -51,6 +54,7 @@ public class PacienteServiceImp implements PacienteService{
 
         Paciente pac = pacienteRepository.save(p);
         pacienteDto.setId(pac.getId());
+        pacienteDto.setDni(pac.getDni());
         pacienteDto.setNombre(pac.getNombre());
         pacienteDto.setApellido(pac.getApellido());
         pacienteDto.setDireccion(pac.getDireccion());
@@ -75,6 +79,7 @@ public class PacienteServiceImp implements PacienteService{
 
         Paciente pa = pacienteRepository.save(p);
         pacienteDto.setId(pa.getId());
+        pacienteDto.setDni(pa.getDni());
         pacienteDto.setNombre(pa.getNombre());
         pacienteDto.setApellido(pa.getApellido());
         pacienteDto.setDireccion(pa.getDireccion());
@@ -91,6 +96,7 @@ public class PacienteServiceImp implements PacienteService{
         for (Paciente p : pacientes) {
             PacienteDto pdto = new PacienteDto();
             pdto.setId(p.getId());
+            pdto.setDni(p.getDni());
             pdto.setNombre(p.getNombre());
             pdto.setApellido(p.getApellido());
             pdto.setDireccion(p.getDireccion());
@@ -126,12 +132,28 @@ public class PacienteServiceImp implements PacienteService{
                 .orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado"));
         PacienteDto dto = new PacienteDto();
         dto.setId(p.getId());
+        dto.setDni(p.getDni());
         dto.setNombre(p.getNombre());
         dto.setApellido(p.getApellido());
         dto.setDireccion(p.getDireccion());
         //dto.setEmail(p.getEmail());
         dto.setIdUsuario(p.getUsuario().getId());
         return dto;
+    }
+
+    @Override
+    public PacienteDto getIdByPacienteEmailandDni(EmailDNIUser emailDNIUser) {
+        Paciente paciente = pacienteRepository.
+                findPacienteByEmailAndDni(emailDNIUser.getEmail(), emailDNIUser.getDni()).
+                orElseThrow(()-> new ResourceNotFoundException("Paciente no encontrado"));
+        PacienteDto pac = new PacienteDto();
+        pac.setId(paciente.getId());
+        pac.setDni(paciente.getDni());
+        pac.setNombre(paciente.getNombre());
+        pac.setApellido(paciente.getApellido());
+        pac.setDireccion(paciente.getDireccion());
+        pac.setIdUsuario(paciente.getUsuario().getId());
+        return pac;
     }
 
 }
