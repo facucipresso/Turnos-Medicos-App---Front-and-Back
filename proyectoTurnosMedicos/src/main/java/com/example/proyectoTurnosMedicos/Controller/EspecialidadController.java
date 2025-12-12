@@ -44,7 +44,7 @@ public class EspecialidadController {
     }
 
     //aca tambien tengo la misma duda
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/especialidades/get/{id}")
     public Especialidad getById(@PathVariable Long id) {
         return especialidadService.getEspecialidadById(id)

@@ -47,7 +47,7 @@ public class ObraSocialController {
     }
 
     // el paciente o quien sea obtiene la lista completa de obras sociales
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/obras-sociales")
     public List<ObraSocial> getAllObrasSociales() {
         return obraSocialService.getObrasSociales();
