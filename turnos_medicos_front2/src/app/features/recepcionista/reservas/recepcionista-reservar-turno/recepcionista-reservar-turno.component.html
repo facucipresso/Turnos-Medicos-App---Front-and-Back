@@ -1,20 +1,24 @@
-<div class="form-wrapper" *ngIf="!paso1Completado">
-    <h2>Reservar Turno</h2>
-  
-    <form [formGroup]="paso1Form" class="reserva-form">
-  
+<div class="form-wrapper">
+
+  <h2>Reservar Turno</h2>
+
+  <form [formGroup]="paso1Form" class="reserva-form">
+
+    <!-- Paso 1 -->
+    <!-- <div *ngIf="!paso1Completado"> -->
+
       <!-- Email -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email del Paciente</mat-label>
         <input matInput formControlName="email" type="email">
       </mat-form-field>
-  
+
       <!-- DNI -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>DNI del Paciente</mat-label>
         <input matInput formControlName="dni" type="text">
       </mat-form-field>
-  
+
       <!-- Obra Social -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Obra Social</mat-label>
@@ -25,18 +29,62 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-  
-      <!-- <button mat-raised-button color="primary" (click)="continuarPaso2()">
-        Continuar
-      </button> -->
-    </form>
-  </div>
-  
-  <!-- Cuando paso 1 está validado -->
-  <div *ngIf="paso1Completado">
-    <h2>Paciente encontrado</h2>
-    <p><strong>{{ pacienteEncontrado?.nombre }} {{ pacienteEncontrado?.apellido }}</strong></p>
-  
-    <p>Ahora podemos continuar con la selección de especialidad.</p>
-  </div>
-  
+
+    <!-- </div> -->
+
+    <!-- Paso 2 -->
+    <div *ngIf="paso1Completado">
+      <!-- Selector de Especialidad (DENTRO DEL FORM!!) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Especialidad</mat-label>
+        <mat-select formControlName="especialidadId">
+          <mat-option value="">-- Seleccionar Especialidad --</mat-option>
+          <mat-option *ngFor="let esp of especialidades" [value]="esp.id">
+            {{ esp.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+    <!-- MÉDICOS -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="paso2Completado">
+      <mat-label>Médico</mat-label>
+      <mat-select formControlName="medicoId">
+        <mat-option value="">-- Seleccionar Médico --</mat-option>
+        <mat-option *ngFor="let med of medicosFiltrados" [value]="med.id">
+          {{ med.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="turnosDisponibles.length > 0" class="turnos-wrapper">
+      <h3>Turnos disponibles</h3>
+
+      <ul class="turnos-list">
+        <li *ngFor="let turno of turnosDisponibles">
+          <span>
+            <small>{{ turno.medico?.apellido }}, {{ turno.medico?.nombre }}</small>
+            <br>
+            {{ turno.diaTurno }} - {{ turno.horaTurno }}
+            
+            
+          </span>
+
+          <button mat-raised-button color="primary"
+                  (click)="reservarTurno(turno)">
+            Reservar
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Si no hay turnos -->
+    <div *ngIf="paso3Completado && turnosDisponibles.length === 0" class="sin-turnos">
+      El médico no tiene turnos disponibles.
+    </div>
+
+
+  </form>
+
+</div>
