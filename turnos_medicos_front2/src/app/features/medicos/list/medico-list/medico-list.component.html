@@ -1,12 +1,15 @@
 <div class="tabla-wrapper">
-
+<!--especialidades-->
   <div class="acciones-header">
     <mat-card-title>Listado de Médicos</mat-card-title>
-        
     <button mat-raised-button color="primary" (click)="irACrearMedico()">
       <mat-icon>add</mat-icon> Agregar Médico
     </button>
-   
+    
+  </div>
+  <div class="acciones-header">
+    <mat-card-title>Aca va a ir el buscador ---------------------------------------
+    </mat-card-title>
   </div>
 
   <p *ngIf="medicos.length === 0" class="sin-datos">No hay médicos registrados</p>
@@ -33,7 +36,22 @@
         </div>
       </td>
     </ng-container>
-    
+
+    <!-- Columna Obras Sociales -->
+
+<ng-container matColumnDef="obrassociales">
+  <th mat-header-cell *matHeaderCellDef> Obras Sociales </th>
+
+  <td mat-cell *matCellDef="let med">
+    <div *ngIf="obtenerObrasSocialesDeMedico(med.id).length > 0; else sinOS">
+      {{ obtenerObrasSocialesDeMedico(med.id) }}
+    </div>
+    <ng-template #sinOS>
+      Sin obras sociales
+    </ng-template>
+  </td>
+</ng-container>
+
 
     <!-- Columna Acciones -->
     <ng-container matColumnDef="acciones">
@@ -51,8 +69,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidades', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidades', 'acciones'];"></tr>
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidades', 'obrassociales', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidades','obrassociales', 'acciones'];"></tr>
 
   </table>
 </div>

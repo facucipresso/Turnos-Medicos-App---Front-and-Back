@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 import { MedicosService } from '../../medicos.service';
 import { Medico } from '../../medico.model';
@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardTitle } from '@angular/material/card';
+import { ObraSocialService } from '../../../obras-sociales/obra-social.service';
 
 @Component({
   selector: 'app-medico-list',
@@ -25,11 +26,13 @@ export class MedicoListComponent implements OnInit{
 
   medicos: MedicoDto[] = [];
   especialidades: Especialidad[] = [];
+  medicosObrasSociales: any[] = []; // aca voy a guardar los id de los medicos y las obras sociales
   administradorId!: number;
 
   constructor(
     private medicoService: MedicosService,
     private especialidadService: EspecialidadService,
+    private obraSocialService: ObraSocialService,
     private router: Router,
     private route: ActivatedRoute
   ){}
@@ -42,6 +45,18 @@ export class MedicoListComponent implements OnInit{
   
     this.medicoService.getMedicos().subscribe(data => {
       this.medicos = data;
+      
+      this.medicos.forEach(med => {
+        this.obraSocialService.getObrasSocialesDeUnMedico(med.id).subscribe(obras => {
+          const nombresObras = obras.map(obra => obra.nombreObraSocial);
+
+          this.medicosObrasSociales.push({
+            medicoId: med.id,
+            obrasSociales: nombresObras
+          });
+        });
+      });
+
     });
   
     this.especialidadService.getEspecialidades().subscribe(data => {
@@ -52,6 +67,29 @@ export class MedicoListComponent implements OnInit{
   obtenerNombreEspecialidad(id: number): string{
     const esp = this.especialidades.find(e => e.id === Number(id));
     return esp ? esp.nombre : 'Sin especialidad';
+  }
+//med
+  obtenerObrasSocialesDeMedico(id:number): string {
+// Buscar el médico en el array medicosObrasSociales
+    const medico = this.medicosObrasSociales.find(item => item.medicoId === id);
+    
+    
+// Si no se encuentra el médico, retornar un string vacío o mensaje
+    if (!medico) {
+        return "No se encontraron obras sociales para este médico";
+    }
+    
+    // Si el médico no tiene obras sociales o el array está vacío
+    if (!medico.obrasSociales || medico.obrasSociales.length === 0) {
+        return "El médico no tiene obras sociales asignadas";
+    }
+    
+    // Formatear las obras sociales con el formato solicitado
+    const obrasFormateadas = medico.obrasSociales
+        .map((obra: any) => `- ${obra} `)
+        .join('\n');
+    
+    return obrasFormateadas;
   }
 
   irACrearMedico(){
