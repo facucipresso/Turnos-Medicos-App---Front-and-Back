@@ -38,7 +38,7 @@ public class TurnoController {
     }
 
     // el medico puede ver todos sus turnos
-    @PreAuthorize("hasAnyRole('MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/medico/{id_medico}/find-my-turnos")
     public List<Turno> findTurnosByMedico(@PathVariable Long id_medico){
         return turnoService.findTurnosByMedico(id_medico);

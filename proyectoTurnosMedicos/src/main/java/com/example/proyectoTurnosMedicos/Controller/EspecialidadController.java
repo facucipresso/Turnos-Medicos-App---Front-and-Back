@@ -37,7 +37,7 @@ public class EspecialidadController {
     }
 
     //tengo duda de cuando el paciente va a sacar un turno se listan las especialidades en un momento
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/especialidades")
     public List<Especialidad> getAll() {
         return especialidadService.getAllEspecialidades();

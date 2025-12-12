@@ -1,6 +1,7 @@
 package com.example.proyectoTurnosMedicos.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +22,6 @@ public class Turno {
 
     @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinColumn(name = "id_medico")
-    @JsonBackReference
+    @JsonManagedReference//@JsonBackReference
     private Medico medico;
 }

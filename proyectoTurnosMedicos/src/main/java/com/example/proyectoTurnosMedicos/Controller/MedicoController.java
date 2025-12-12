@@ -79,7 +79,7 @@ public class MedicoController {
     }
 
     //se filtra medicos por obra social
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @GetMapping("/medicos/obra-social/{id_obraSocial}")
     public List<MedicoDto> getMedicosByObra(@PathVariable Long id_obraSocial){
         return medicoService.getMedicosByObraSocial(id_obraSocial);

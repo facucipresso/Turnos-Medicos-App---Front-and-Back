@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +101,26 @@ public class TurnoServiceImp implements TurnoService{
     public List<Turno> findTurnosByMedico(Long id_medico) {
         Medico m = medicoRepository.findById(id_medico).
                 orElseThrow(()->new ResourceNotFoundException("Medico no encontrado"));
-        return m.getTurnos();
+        LocalDate hoy = LocalDate.now();
+        LocalTime horaActual = LocalTime.now();
+
+        return m.getTurnos().stream()
+                .filter(t -> !t.isReservado()) // turnos NO reservados
+                .filter(t -> {
+                    // Si la fecha del turno es después de hoy -> válido
+                    if (t.getDiaTurno().isAfter(hoy)) {
+                        return true;
+                    }
+
+                    // Si es hoy → comparar hora
+                    if (t.getDiaTurno().isEqual(hoy)) {
+                        return !t.getHoraTurno().isBefore(horaActual);
+                    }
+
+                    // Si es antes de hoy, descartar
+                    return false;
+                })
+                .toList();
     }
 
     @Override

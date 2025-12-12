@@ -18,7 +18,7 @@ public class ReservaController {
     ReservaService reservaService;
 
     // el paciente hace una reserva, el medico tambien podria
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @PostMapping("/pacientes/turnos/create-reserva")
     public ReservaDto createReserva(@RequestBody ReservaRequestDto rrdto){
         return reservaService.createReserva(rrdto);

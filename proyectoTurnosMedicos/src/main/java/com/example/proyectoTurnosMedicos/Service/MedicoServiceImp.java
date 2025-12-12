@@ -106,6 +106,7 @@ public class MedicoServiceImp implements MedicoService{
             MedicoDto medicoDto = new MedicoDto();
             medicoDto.setId(m.getId());
             medicoDto.setDni(m.getDni());
+            medicoDto.setMatricula(m.getMatricula());
             medicoDto.setNombre(m.getNombre());
             medicoDto.setApellido(m.getApellido());
             medicoDto.setDireccion(m.getDireccion());
