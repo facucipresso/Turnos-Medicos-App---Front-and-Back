@@ -1,0 +1,32 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+    <h2>Iniciar Sesión</h2>
+
+    <form [formGroup]="form" (ngSubmit)="loginUsuario()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          El email es obligatorio y debe tener un formato válido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          La contraseña es obligatoria
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
+        Ingresar
+      </button>
+
+      <div class="registro-link">
+        <span>¿No tenés cuenta?</span>
+        <button mat-button color="accent" routerLink="/registro">Registrarme</button>
+      </div>
+    </form>
+  </mat-card>
+</div>

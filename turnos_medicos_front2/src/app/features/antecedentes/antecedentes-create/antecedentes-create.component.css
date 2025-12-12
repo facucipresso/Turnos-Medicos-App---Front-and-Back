@@ -1,0 +1,28 @@
+.antecedentes-container {
+    max-width: 600px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .antecedentes-card {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #1a3c68;
+  }
+  
+  .antecedentes-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  button {
+    align-self: flex-start;
+  }
+  

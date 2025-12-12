@@ -1,0 +1,58 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <mat-card-title>Listado de Médicos</mat-card-title>
+        
+    <button mat-raised-button color="primary" (click)="irACrearMedico()">
+      <mat-icon>add</mat-icon> Agregar Médico
+    </button>
+   
+  </div>
+
+  <p *ngIf="medicos.length === 0" class="sin-datos">No hay médicos registrados</p>
+
+  <table mat-table [dataSource]="medicos" class="mat-elevation-z2 medico-table" *ngIf="medicos.length > 0">
+
+    <!-- Columna Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let med"> {{ med.nombre }} {{ med.apellido }} </td>
+    </ng-container>
+
+    <!-- Columna Especialidad -->
+    <!-- <ng-container matColumnDef="especialidad">
+      <th mat-header-cell *matHeaderCellDef> Especialidad </th>
+      <td mat-cell *matCellDef="let med"> {{ obtenerNombreEspecialidad(med.idEspecialidad) }} </td>
+    </ng-container> -->
+
+    <ng-container matColumnDef="especialidades">
+      <th mat-header-cell *matHeaderCellDef> Especialidades </th>
+      <td mat-cell *matCellDef="let med">
+        <div *ngFor="let idEsp of med.idEspecialidades">
+          - {{ obtenerNombreEspecialidad(idEsp) }}
+        </div>
+      </td>
+    </ng-container>
+    
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let med">
+        <button mat-icon-button color="warn" (click)="eliminarMedico(med.id)" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <!-- Descomentar si quiero editar un medico  desde el front -->
+        <!--
+        <button mat-icon-button color="primary" (click)="editMedico(med.id)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        -->
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidades', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidades', 'acciones'];"></tr>
+
+  </table>
+</div>

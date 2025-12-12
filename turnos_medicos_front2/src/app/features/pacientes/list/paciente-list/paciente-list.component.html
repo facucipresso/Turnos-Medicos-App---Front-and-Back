@@ -1,0 +1,57 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <mat-card-title>Listado de Pacientes</mat-card-title>
+  </div>
+
+  <p *ngIf="pacientes.length === 0" class="sin-datos">No hay pacientes registrados</p>
+
+  <table mat-table [dataSource]="pacientes" class="mat-elevation-z2 pacientes-table" *ngIf="pacientes.length > 0">
+      
+    <!-- Columna Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let pac"> {{ pac.nombre }} </td>
+    </ng-container>
+
+    <!-- Columna Apellido -->
+    <ng-container matColumnDef="apellido">
+      <th mat-header-cell *matHeaderCellDef> Apellido </th>
+      <td mat-cell *matCellDef="let pac"> {{ pac.apellido }} </td>
+    </ng-container>
+
+    <!-- Columna Dirección -->
+    <ng-container matColumnDef="direccion">
+      <th mat-header-cell *matHeaderCellDef> Dirección </th>
+      <td mat-cell *matCellDef="let pac"> {{ pac.direccion }} </td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let pac">
+        <ng-container *ngIf="!esMedico; else medicoBtns">
+          <button mat-icon-button color="primary" (click)="editPaciente(pac.id)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarPaciente(pac.id)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </ng-container>
+
+        <ng-template #medicoBtns>
+          <button mat-icon-button color="accent" (click)="verAntecedentes(pac.id)" matTooltip="Ver Antecedentes">
+            <mat-icon>assignment</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="verHistorial(pac.id)" matTooltip="Ver Historial">
+            <mat-icon>history</mat-icon>
+          </button>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'apellido', 'direccion', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'apellido', 'direccion', 'acciones'];"></tr>
+
+  </table>
+</div>

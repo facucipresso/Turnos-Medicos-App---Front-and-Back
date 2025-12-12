@@ -1,0 +1,44 @@
+<mat-card>
+  <mat-card-header class="acciones-header">
+    <mat-card-title>Reservas de Turnos</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <table mat-table [dataSource]="reservasDtoMedico" class="mat-elevation-z2">
+
+      <!-- Nombre Paciente -->
+      <ng-container matColumnDef="nombrePaciente">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let element"> {{ element.nombrePaciente }} </td>
+      </ng-container>
+
+      <!-- Apellido Paciente -->
+      <ng-container matColumnDef="apellidoPaciente">
+        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+        <td mat-cell *matCellDef="let element"> {{ element.apellidoPaciente }} </td>
+      </ng-container>
+
+      <!-- Obra Social -->
+      <ng-container matColumnDef="obraSocial">
+        <th mat-header-cell *matHeaderCellDef> Obra Social </th>
+        <td mat-cell *matCellDef="let element"> {{ element.nombreObraSocial }} </td>
+      </ng-container>
+
+      <!-- Fecha -->
+      <ng-container matColumnDef="fechaReserva">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{ element.fechaReserva }} </td>
+      </ng-container>
+
+      <!-- Hora -->
+      <ng-container matColumnDef="horaReserva">
+        <th mat-header-cell *matHeaderCellDef> Hora </th>
+        <td mat-cell *matCellDef="let element"> {{ element.horaReserva }} </td>
+      </ng-container>
+
+      <!-- Header y Rows -->
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

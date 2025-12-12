@@ -1,0 +1,69 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <mat-card-title>Mis reservas</mat-card-title>
+    <button mat-raised-button color="primary" [routerLink]="['/paciente', pacienteId, 'reservas', 'crear']">
+      <mat-icon>add</mat-icon> Reservar un turno
+    </button>
+  </div>
+
+  <p *ngIf="reservasdto.length === 0" class="sin-datos">
+    No tenés reservas activas.
+  </p>
+
+  <table mat-table [dataSource]="reservasdto" class="mat-elevation-z2 reserva-table" *ngIf="reservasdto.length > 0">
+
+    <!-- Médico -->
+    <ng-container matColumnDef="medico">
+      <th mat-header-cell *matHeaderCellDef> Médico </th>
+      <td mat-cell *matCellDef="let res"> {{ res.apellidoMedico }} </td>
+    </ng-container>
+
+    <!-- Especialidad -->
+    <ng-container matColumnDef="especialidad">
+      <th mat-header-cell *matHeaderCellDef> Especialidad </th>
+      <td mat-cell *matCellDef="let res"> {{ res.especialidadMedico }} </td>
+    </ng-container>
+
+    <!-- Día -->
+    <ng-container matColumnDef="dia">
+      <th mat-header-cell *matHeaderCellDef> Día </th>
+      <td mat-cell *matCellDef="let res"> {{ res.fechaReserva }} </td>
+    </ng-container>
+
+    <!-- Hora -->
+    <ng-container matColumnDef="hora">
+      <th mat-header-cell *matHeaderCellDef> Hora </th>
+      <td mat-cell *matCellDef="let res"> {{ res.horaReserva }} </td>
+    </ng-container>
+
+    <!-- Paciente -->
+    <ng-container matColumnDef="paciente">
+      <th mat-header-cell *matHeaderCellDef> Paciente </th>
+      <td mat-cell *matCellDef="let res">
+        {{ res.apellidoPaciente }} {{ res.nombrePaciente }}
+      </td>
+    </ng-container>
+
+    <!-- Obra Social -->
+    <ng-container matColumnDef="obraSocial">
+      <th mat-header-cell *matHeaderCellDef> Obra Social </th>
+      <td mat-cell *matCellDef="let res"> {{ res.nombreObraSocial }} </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let res">
+        <button mat-icon-button color="warn" (click)="cancelarReserva(res.id)" matTooltip="Cancelar Reserva">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header y rows -->
+    <tr mat-header-row *matHeaderRowDef="['medico','especialidad','dia','hora','paciente','obraSocial','acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['medico','especialidad','dia','hora','paciente','obraSocial','acciones'];"></tr>
+
+  </table>
+</div>

@@ -1,0 +1,30 @@
+<div class="form-wrapper">
+    <h2>{{ editando ? 'Editar Turno' : 'Crear Turno' }}</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="creacionTurno()" class="turno-form">
+  
+      <!-- Fecha -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha del Turno</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Seleccione fecha" formControlName="diaTurno">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="form.get('diaTurno')?.invalid && form.get('diaTurno')?.touched">
+          La fecha es obligatoria
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Hora -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Hora del Turno</mat-label>
+        <input matInput type="time" formControlName="horaTurno">
+        <mat-error *ngIf="form.get('horaTurno')?.invalid && form.get('horaTurno')?.touched">
+          La hora es obligatoria
+        </mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ editando ? 'Guardar Cambios' : 'Crear Turno' }}
+      </button>
+    </form>
+  </div>

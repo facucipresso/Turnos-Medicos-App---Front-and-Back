@@ -1,0 +1,53 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <mat-card-title>Listado de Turnos</mat-card-title>
+    <!-- <h2>Listado de Turnos</h2> -->
+    <button mat-raised-button color="primary" (click)="createTurno()">
+      <mat-icon>add</mat-icon> Agregar Turno
+    </button>
+  </div>
+
+  <p *ngIf="turnos.length === 0" class="sin-datos">No hay turnos disponibles</p>
+
+  <table mat-table [dataSource]="turnos" class="mat-elevation-z2 turnos-table" *ngIf="turnos.length > 0">
+
+    <!-- Fecha -->
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let element"> {{ element.diaTurno }} </td>
+    </ng-container>
+
+    <!-- Hora -->
+    <ng-container matColumnDef="hora">
+      <th mat-header-cell *matHeaderCellDef> Hora </th>
+      <td mat-cell *matCellDef="let element"> {{ element.horaTurno }} </td>
+    </ng-container>
+
+    <!-- Estado -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef> Estado </th>
+      <td mat-cell *matCellDef="let element">
+        <span [style.color]="element.reservado ? 'red' : 'green'">
+          {{ element.reservado ? 'Reservado' : 'Disponible' }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="editarTurno(element.id)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarTurno(element.id)" [disabled]="element.reservado" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+  </table>
+</div>

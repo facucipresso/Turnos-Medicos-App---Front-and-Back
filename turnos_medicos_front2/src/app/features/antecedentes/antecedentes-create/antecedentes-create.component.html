@@ -1,0 +1,37 @@
+<div class="antecedentes-container">
+
+  <h2>Antecedentes del paciente</h2>
+
+  <!-- Antecedentes previos -->
+  <mat-card *ngIf="antecedentesPrevios; else sinAntecedentes" class="antecedentes-card">
+    <mat-card-content>
+      <p>{{ antecedentesPrevios }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <ng-template #sinAntecedentes>
+    <mat-card class="antecedentes-card">
+      <mat-card-content>
+        <p>No hay antecedentes registrados para este paciente.</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+
+  <!-- Formulario de carga/actualización -->
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="antecedentes-form">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ antecedentesPrevios ? 'Actualizar antecedentes' : 'Cargar antecedentes' }}</mat-label>
+      <textarea matInput rows="4" formControlName="descripcionAntecedentes"></textarea>
+      <mat-error *ngIf="form.get('descripcionAntecedentes')?.hasError('required')">
+        Este campo es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      {{ antecedentesPrevios ? 'Actualizar' : 'Guardar' }}
+    </button>
+
+  </form>
+
+</div>

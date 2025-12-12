@@ -1,0 +1,32 @@
+/* Toolbar principal */
+.navbar.mat-toolbar {
+  width: 100%;
+  margin: 0;
+  padding: 0 24px; /* opcional, para no pegar los botones al borde */
+  background-color: #2E78A3; /* azul sobrio */
+  color: white;
+}
+
+/* Espaciador para alinear "Cerrar Sesión" a la derecha */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Links dentro del toolbar */
+.navbar a[mat-button] {
+  color: white;
+  font-weight: 500;
+  text-transform: none; /* evita mayúsculas forzadas */
+}
+
+/* Hover de los botones */
+.navbar a[mat-button]:hover {
+  background-color: rgba(255, 255, 255, 0.15); 
+  border-radius: 4px;
+}
+
+/* Estado activo */
+.navbar a.active {
+  border-bottom: 2px solid #1abc9c;
+}
+  

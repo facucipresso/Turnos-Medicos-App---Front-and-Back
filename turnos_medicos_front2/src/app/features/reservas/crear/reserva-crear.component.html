@@ -1,0 +1,63 @@
+<div class="form-wrapper">
+  <h2>Reservar Turno</h2>
+
+  <form class="reserva-form">
+
+    <!-- Pso 1: Seleccionar Obra Social -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Obra Social</mat-label>
+      <mat-select [(value)]="obraSeleccionadaId" (selectionChange)="onObraSocialChange()">
+        <mat-option [value]="null">-- Seleccionar Obra Social --</mat-option>
+        <mat-option *ngFor="let obra of obrasSociales" [value]="obra.id">
+          {{ obra.nombreObraSocial }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Paso 2: Seleccionar Especialidad -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="obraSeleccionadaId">
+      <mat-label>Especialidad</mat-label>
+      <mat-select [(value)]="especialidadSeleccionadaId" (selectionChange)="onEspecialidadChange()">
+        <mat-option [value]="null">-- Seleccionar Especialidad --</mat-option>
+        <mat-option *ngFor="let esp of especialidades" [value]="esp.id">
+          {{ esp.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- 3: Seleccionar Médico -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="medicosFiltrados.length > 0">
+      <mat-label>Médico</mat-label>
+      <mat-select [(value)]="medicoSeleccionadoId" (selectionChange)="onMedicoSeleccionado()">
+        <mat-option [value]="null">-- Seleccionar Médico --</mat-option>
+        <mat-option *ngFor="let med of medicosFiltrados" [value]="med.id">
+          {{ med.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Mensaje si no hay médicos -->
+    <div *ngIf="especialidadSeleccionadaId && !tieneMedicos" class="sin-medicos">
+      <p>No hay médicos disponibles para esta especialidad.</p>
+    </div>
+
+    <!-- Paso 4: Muestro Turnos Disponibles -->
+    <div *ngIf="turnosDisponibles.length > 0">
+      <h3>Turnos disponibles</h3>
+      <ul class="turnos-list">
+        <li *ngFor="let turno of turnosDisponibles">
+          {{ turno.diaTurno }} - {{ turno.horaTurno }}
+          <button mat-raised-button color="primary" (click)="reservarTurno(turno)">
+            Reservar
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mensaje si no hay turnos -->
+    <div *ngIf="medicoSeleccionadoId && turnosDisponibles.length === 0" class="sin-turnos">
+      <p>No hay turnos disponibles para este médico.</p>
+    </div>
+
+  </form>
+</div>

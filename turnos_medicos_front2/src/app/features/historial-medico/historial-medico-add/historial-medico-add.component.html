@@ -1,0 +1,60 @@
+<div class="form-wrapper">
+    <h2>Agregar registro al historial médico</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="guardarHistorial()" class="historial-form">
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha</mat-label>
+        <input matInput type="date" formControlName="fechaDto">
+        <mat-error *ngIf="form.get('fechaDto')?.invalid && form.get('fechaDto')?.touched">
+          La fecha es obligatoria
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Obra Social</mat-label>
+        <mat-select formControlName="obrasocialDto">
+          <mat-option [value]="null">-- Seleccionar --</mat-option>
+          <mat-option *ngFor="let os of obrasSocialesDisponibles" [value]="os.id">
+            {{ os.nombreObraSocial }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('obrasocialDto')?.invalid && form.get('obrasocialDto')?.touched">
+          Seleccioná una Obra Social
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Medicación actual</mat-label>
+        <input matInput type="text" formControlName="medicacionActualDto">
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Motivo</mat-label>
+        <input matInput type="text" formControlName="motivoDto">
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <input matInput type="text" formControlName="descripcionDto">
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tratamiento</mat-label>
+        <input matInput type="text" formControlName="tratamientoDto">
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Costo (ARS)</mat-label>
+        <input matInput type="number" formControlName="costoDto">
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        Guardar
+      </button>
+    </form>
+  </div>
+  
+  
+
+

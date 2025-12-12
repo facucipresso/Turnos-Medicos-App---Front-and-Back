@@ -1,0 +1,31 @@
+.app-header {
+    background-color: #1a3c68; 
+    color: white;
+    padding: 12px 24px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .app-header h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 20px;
+    text-align: left;
+  }
+
+  .app-content {
+    min-height: calc(100vh - 120px);
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .app-footer {
+    background-color: #e9ecef;
+    color: #495057;
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  

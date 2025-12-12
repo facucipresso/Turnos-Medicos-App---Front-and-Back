@@ -1,0 +1,85 @@
+<div class="form-wrapper">
+  <h2>{{ medicoId ? 'Editar Médico' : 'Nuevo Médico' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardarMedico()" class="medico-form">
+
+    <!-- DNI -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Dni</mat-label>
+      <input matInput type="text" formControlName="dni">
+      <mat-error *ngIf="form.get('dni')?.hasError('required')">
+        El dni es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <!-- MATRICULA -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Matricula</mat-label>
+      <input matInput type="text" formControlName="matricula">
+      <mat-error *ngIf="form.get('matricula')?.hasError('required')">
+        La matricula es obligatoria
+      </mat-error>
+    </mat-form-field>
+
+    <!-- NOMBRE -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput type="text" formControlName="nombre">
+      <mat-error *ngIf="form.get('nombre')?.hasError('required')">
+        El nombre es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <!-- APELLIDO -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido</mat-label>
+      <input matInput type="text" formControlName="apellido">
+      <mat-error *ngIf="form.get('apellido')?.hasError('required')">
+        El apellido es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <!-- DIRECCIÓN -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Dirección</mat-label>
+      <input matInput type="text" formControlName="direccion">
+      <mat-error *ngIf="form.get('direccion')?.hasError('required')">
+        La dirección es obligatoria
+      </mat-error>
+    </mat-form-field>
+
+    <!-- ESPECIALIDAD esto era de cuando el medico podia tener solo una especialidad -->
+    <!-- <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Especialidad</mat-label>
+      <mat-select formControlName="especialidadId">
+        <mat-option [value]="null">-- Seleccionar Especialidad --</mat-option>
+        <mat-option *ngFor="let esp of especialidadesDisponibles" [value]="esp.id">
+          {{ esp.nombre }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('especialidadId')?.hasError('required')">
+        Seleccioná una especialidad.
+      </mat-error>
+    </mat-form-field> -->
+
+    <!-- ESPECIALIDADES -->
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Especialidades</mat-label>
+  <mat-select formControlName="idEspecialidades" multiple>
+    <mat-option *ngFor="let esp of especialidadesDisponibles" [value]="esp.id">
+      {{ esp.nombre }}
+    </mat-option>
+  </mat-select>
+
+  <mat-error *ngIf="form.get('idEspecialidades')?.hasError('required')">
+    Seleccioná al menos una especialidad.
+  </mat-error>
+</mat-form-field>
+
+    <!-- BOTÓN GUARDAR -->
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      {{ medicoId ? 'Guardar Cambios' : 'Crear Médico' }}
+    </button>
+
+  </form>
+</div>

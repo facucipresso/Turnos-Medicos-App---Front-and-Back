@@ -1,0 +1,30 @@
+.form-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .form-wrapper h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #1a3c68;
+  }
+  
+  .especialidad-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  button {
+    align-self: center;
+    width: 180px;
+  }
+  

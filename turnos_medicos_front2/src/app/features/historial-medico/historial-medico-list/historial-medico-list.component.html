@@ -1,0 +1,63 @@
+<div class="tabla-wrapper">
+
+
+  <div class="acciones-header">
+    <h2>Historial del Paciente</h2>
+    <button mat-raised-button color="primary" (click)="irAgregarHistorial()">
+      <mat-icon>add</mat-icon> Agregar registro al historial
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="historiales" class="mat-elevation-z2 pacientes-table">
+
+    <!-- Fecha y Médico -->
+    <ng-container matColumnDef="fechaMedico">
+      <th mat-header-cell *matHeaderCellDef> Fecha / Médico </th>
+      <td mat-cell *matCellDef="let h"> {{ h.fechaDto }} - {{ h.nombreMedicoDto }} </td>
+    </ng-container>
+
+    <!-- Motivo -->
+    <ng-container matColumnDef="motivo">
+      <th mat-header-cell *matHeaderCellDef> Motivo </th>
+      <td mat-cell *matCellDef="let h"> {{ h.motivoDto }} </td>
+    </ng-container>
+
+    <!-- Descripción -->
+    <ng-container matColumnDef="descripcion">
+      <th mat-header-cell *matHeaderCellDef> Descripción </th>
+      <td mat-cell *matCellDef="let h"> {{ h.descripcionDto }} </td>
+    </ng-container>
+
+    <!-- Tratamiento -->
+    <ng-container matColumnDef="tratamiento">
+      <th mat-header-cell *matHeaderCellDef> Tratamiento </th>
+      <td mat-cell *matCellDef="let h"> {{ h.tratamientoDto }} </td>
+    </ng-container>
+
+    <!-- Medicación -->
+    <ng-container matColumnDef="medicacion">
+      <th mat-header-cell *matHeaderCellDef> Medicación </th>
+      <td mat-cell *matCellDef="let h"> {{ h.medicacionActualDto }} </td>
+    </ng-container>
+
+    <!-- Costo -->
+    <ng-container matColumnDef="costo">
+      <th mat-header-cell *matHeaderCellDef> Costo </th>
+      <td mat-cell *matCellDef="let h"> {{ h.costoDto }} ARS </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let h">
+        <button mat-icon-button color="warn" (click)="eliminarEntradaDelHistorial(h.id)" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['fechaMedico','motivo','descripcion','tratamiento','medicacion','costo','acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['fechaMedico','motivo','descripcion','tratamiento','medicacion','costo','acciones'];"></tr>
+
+  </table>
+</div>

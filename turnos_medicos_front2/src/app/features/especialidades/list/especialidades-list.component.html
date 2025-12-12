@@ -1,0 +1,40 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <mat-card-title>Listado de Especialidades</mat-card-title>
+
+    <button mat-raised-button color="primary" (click)="crearEspecialidad()">
+      <mat-icon>add</mat-icon> Agregar Especialidad
+    </button>
+  </div>
+
+  <p *ngIf="especialidades.length === 0" class="sin-datos">
+    No hay especialidades registradas
+  </p>
+
+  <table mat-table [dataSource]="especialidades" class="mat-elevation-z2 especialidades-table">
+
+    <!-- Columna Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let espe"> {{ espe.nombre }} </td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let espe">
+        <button mat-icon-button color="primary" (click)="editEspecialidad(espe.id)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarEspecialidad(espe.id)" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'acciones'];"></tr>
+
+  </table>
+</div>

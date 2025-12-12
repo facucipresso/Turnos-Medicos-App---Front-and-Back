@@ -1,0 +1,42 @@
+<div class="form-wrapper" *ngIf="!paso1Completado">
+    <h2>Reservar Turno</h2>
+  
+    <form [formGroup]="paso1Form" class="reserva-form">
+  
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email del Paciente</mat-label>
+        <input matInput formControlName="email" type="email">
+      </mat-form-field>
+  
+      <!-- DNI -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>DNI del Paciente</mat-label>
+        <input matInput formControlName="dni" type="text">
+      </mat-form-field>
+  
+      <!-- Obra Social -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Obra Social</mat-label>
+        <mat-select formControlName="obraSocialId">
+          <mat-option value="">-- Seleccionar Obra Social --</mat-option>
+          <mat-option *ngFor="let obra of obrasSociales" [value]="obra.id">
+            {{ obra.nombreObraSocial }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <!-- <button mat-raised-button color="primary" (click)="continuarPaso2()">
+        Continuar
+      </button> -->
+    </form>
+  </div>
+  
+  <!-- Cuando paso 1 está validado -->
+  <div *ngIf="paso1Completado">
+    <h2>Paciente encontrado</h2>
+    <p><strong>{{ pacienteEncontrado?.nombre }} {{ pacienteEncontrado?.apellido }}</strong></p>
+  
+    <p>Ahora podemos continuar con la selección de especialidad.</p>
+  </div>
+  

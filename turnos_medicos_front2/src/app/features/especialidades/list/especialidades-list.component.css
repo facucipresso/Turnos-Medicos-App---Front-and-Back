@@ -1,0 +1,60 @@
+.tabla-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  overflow-x: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 16px;
+}
+
+.acciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+
+.acciones-header mat-card-title {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 20px;       
+  font-weight: 500;       
+  color: #1a3c68; 
+  margin: 0;
+}
+
+.especialidades-table {
+  width: 100%;
+  margin-top: 10px;
+  border-spacing: 0 4px;
+}
+
+.especialidades-table th.mat-header-cell {
+  background-color: #1a3c68;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-bottom: 3px solid #1abc9c;
+}
+
+.especialidades-table td.mat-cell {
+  padding: 12px 8px;
+  font-size: 14px;
+  color: #212121;
+}
+
+.especialidades-table tr.mat-row:hover {
+  background-color: #e3f2fd;
+}
+
+.mat-cell, .mat-header-cell {
+  text-align: left;
+}
+
+.sin-datos {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 16px;
+}

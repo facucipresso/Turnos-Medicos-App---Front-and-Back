@@ -1,0 +1,27 @@
+<div class="form-wrapper">
+    <h2>{{ editando ? 'Editar Obra Social' : 'Crear Obra Social' }}</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="crearObraSocial()" class="obra-form">
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre de la Obra Social</mat-label>
+        <input matInput placeholder="Ingrese nombre" formControlName="nombreObraSocial">
+        <mat-error *ngIf="form.get('nombreObraSocial')?.invalid && form.get('nombreObraSocial')?.touched">
+          El nombre es obligatorio
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Plan de la Obra Social</mat-label>
+        <input matInput placeholder="Ingrese plan" formControlName="planObraSocial">
+        <mat-error *ngIf="form.get('planObraSocial')?.invalid && form.get('planObraSocial')?.touched">
+          El plan es obligatorio
+        </mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ editando ? 'Guardar Cambios' : 'Crear Obra Social' }}
+      </button>
+  
+    </form>
+  </div>

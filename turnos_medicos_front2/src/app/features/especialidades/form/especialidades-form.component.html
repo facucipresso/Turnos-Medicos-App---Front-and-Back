@@ -1,0 +1,20 @@
+<div class="form-wrapper">
+    <h2>{{ modoEdicion ? 'Editar Especialidad' : 'Agregar Especialidad' }}</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="agregarEspecialidad()" class="especialidad-form">
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre de la especialidad</mat-label>
+        <input matInput formControlName="nombre" placeholder="Ingrese nombre">
+        <mat-error *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+          El nombre es obligatorio
+        </mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ modoEdicion ? 'Guardar Cambios' : 'Crear Especialidad' }}
+      </button>
+  
+    </form>
+  </div>
+  

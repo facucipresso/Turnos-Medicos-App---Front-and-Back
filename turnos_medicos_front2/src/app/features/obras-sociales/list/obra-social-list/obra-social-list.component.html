@@ -1,0 +1,63 @@
+<div class="tabla-wrapper">
+
+  <div class="acciones-header">
+    <!-- <h2>Listado de Obras Sociales</h2> -->
+    <mat-card-title>Listado de Obras Sociales</mat-card-title>
+
+    <button *ngIf="!esMedico" mat-raised-button color="primary" (click)="crearObraSocial()">
+      <mat-icon>add</mat-icon> Agregar Obra Social
+    </button>
+  </div>
+
+  <p *ngIf="obrasSociales.length === 0" class="sin-datos">No hay obras sociales registradas</p>
+
+  <table mat-table [dataSource]="obrasSociales" class="mat-elevation-z2 obra-social-table">
+
+    <!-- Columna Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let obra"> {{ obra.nombreObraSocial }} </td>
+    </ng-container>
+
+    <!-- Columna Plan -->
+    <ng-container matColumnDef="plan">
+      <th mat-header-cell *matHeaderCellDef> Plan </th>
+      <td mat-cell *matCellDef="let obra"> {{ obra.planObraSocial }} </td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let obra">
+
+        <ng-container *ngIf="!esMedico">
+          <button mat-icon-button color="primary" (click)="editObraSocial(obra.id)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarObraSocial(obra.id)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="esMedico">
+          <button *ngIf="obrasDelMedico.includes(obra.id)"
+                  mat-raised-button color="warn"
+                  (click)="quitarObraDelMedico(obra.id)">
+            Dejar de trabajar
+          </button>
+          <button *ngIf="!obrasDelMedico.includes(obra.id)"
+                  mat-raised-button color="accent"
+                  (click)="agregarObraAlMedico(obra.id)">
+            Agregar a mis obras sociales
+          </button>
+        </ng-container>
+
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'plan', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'plan', 'acciones'];"></tr>
+
+
+  </table>
+</div>

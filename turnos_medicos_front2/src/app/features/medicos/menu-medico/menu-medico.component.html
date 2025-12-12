@@ -1,0 +1,10 @@
+<mat-toolbar color="primary" class="navbar">
+  <a mat-button [routerLink]="['/medico', medicoId, 'reservas']" routerLinkActive="active">Reservas</a>
+  <a mat-button [routerLink]="['/medico', medicoId, 'turnos']" routerLinkActive="active">Turnos</a>
+  <a mat-button [routerLink]="['/medico', medicoId, 'pacientes']" routerLinkActive="active">Pacientes</a>
+  <a mat-button [routerLink]="['/medico', medicoId, 'obras-sociales']" routerLinkActive="active">Obras Sociales</a>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/login">Cerrar Sesión</a>
+</mat-toolbar>
