@@ -1,6 +1,7 @@
 package com.example.proyectoTurnosMedicos.Service;
 
 import com.example.proyectoTurnosMedicos.Entity.DTO.MedicoDto;
+import com.example.proyectoTurnosMedicos.Entity.DTO.MedicoFullDto;
 import com.example.proyectoTurnosMedicos.Entity.Especialidad;
 import com.example.proyectoTurnosMedicos.Entity.Medico;
 import com.example.proyectoTurnosMedicos.Entity.ObraSocial;
@@ -116,6 +117,38 @@ public class MedicoServiceImp implements MedicoService{
             medicosDtos.add(medicoDto);
         }
         return medicosDtos;
+    }
+
+    @Override
+    public List<MedicoFullDto> findAllMedicosFull() {
+        List<Medico> medicos = medicoRepository.findAll();
+        List<MedicoFullDto> medicosFullDtos = new ArrayList<>();
+        for(Medico m : medicos){
+            List<Long> idEspecialidades = new ArrayList<Long>();
+            for(Especialidad esp : m.getEspecialidades()){
+                especialidadRepository.findById(esp.getId()).
+                        orElseThrow(() -> new BadRequestException("Una de las especialidades no fue encontrada"));
+                idEspecialidades.add(esp.getId());
+            }
+            List<Long> idObrasSociales = new ArrayList<Long>();
+            for(ObraSocial obra : m.getObrasSociales()){
+                obraSocialRepository.findById(obra.getId()).
+                        orElseThrow(() -> new BadRequestException("Una de las obras sociales no fue encontrada"));
+                idObrasSociales.add(obra.getId());
+            }
+            MedicoFullDto medicoFullDto = new MedicoFullDto();
+            medicoFullDto.setId(m.getId());
+            medicoFullDto.setDni(m.getDni());
+            medicoFullDto.setNombre(m.getNombre());
+            medicoFullDto.setApellido(m.getApellido());
+            medicoFullDto.setDireccion(m.getDireccion());
+            medicoFullDto.setIdEspecialidades(idEspecialidades);
+            medicoFullDto.setIdObrasSociales(idObrasSociales);
+            medicoFullDto.setIdUsuario(m.getUsuario().getId());
+            medicoFullDto.setEmail(m.getUsuario().getEmail());
+            medicosFullDtos.add(medicoFullDto);
+        }
+        return medicosFullDtos;
     }
 
     @Override

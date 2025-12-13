@@ -1,6 +1,7 @@
 package com.example.proyectoTurnosMedicos.Controller;
 
 import com.example.proyectoTurnosMedicos.Entity.DTO.MedicoDto;
+import com.example.proyectoTurnosMedicos.Entity.DTO.MedicoFullDto;
 import com.example.proyectoTurnosMedicos.Entity.Medico;
 import com.example.proyectoTurnosMedicos.Service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,13 @@ public class MedicoController {
     @GetMapping("/medicos/findAllMedicos")
     public List<MedicoDto> findAllMedicos(){
         return medicoService.findAllMedicos();
+    }
+
+    //puede ser accedido por todos los roles, TIENE QUE DEVOLVER UNA LISTA DE MEDICOS
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @GetMapping("/medicos/findAllMedicosFull")
+    public List<MedicoFullDto> findAllMedicosFull(){
+        return medicoService.findAllMedicosFull();
     }
 
     //el medico se agrega una obra social para trabajar con ella
