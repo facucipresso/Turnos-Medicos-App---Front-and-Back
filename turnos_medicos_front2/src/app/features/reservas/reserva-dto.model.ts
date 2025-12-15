@@ -5,6 +5,6 @@ export interface ReservaDto {
     nombrePaciente: String;
     apellidoPaciente: string;
     apellidoMedico: string;
-    especialidadMedico: string;
+    especialidadMedico?: string;
     nombreObraSocial: String;
   }

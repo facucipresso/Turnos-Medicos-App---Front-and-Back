@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ReservaDto } from './reserva-dto.model';
+import { ReservaCancelDto } from './ReservaCancelDto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class ReservaService {
 
   obtenerReservasPorMedico(idMedico: number): Observable<ReservaDto[]>{
     return this.http.get<ReservaDto[]>(`${this.apiUrl}/medico/${idMedico}/get-reservas`);
+  }
+
+  buscarReservaParaCancelar(dto: ReservaCancelDto): Observable<ReservaDto> {
+    return this.http.post<ReservaDto>(`${this.apiUrl}/reservas/cancelar/buscar`,dto);
   }
 
   

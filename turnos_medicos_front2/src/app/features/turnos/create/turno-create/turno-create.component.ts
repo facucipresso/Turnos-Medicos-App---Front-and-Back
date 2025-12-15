@@ -26,6 +26,9 @@ export class TurnoCreateComponent implements OnInit{
   turnoId!: number;
   editando = false;
 
+    /** Fecha mínima = hoy */
+    minDate: Date = new Date();
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -34,7 +37,7 @@ export class TurnoCreateComponent implements OnInit{
   ){
     this.form = this.fb.group({
       diaTurno: ['', Validators.required],
-      horaTurno: ['', Validators.required]
+      horaTurno: ['', [Validators.required, this.horaValidaValidator]]
     });
   }
 
@@ -70,6 +73,28 @@ export class TurnoCreateComponent implements OnInit{
       
     });
   }
+
+    /** Deshabilita sábados y domingos */
+    filtroFechas = (date: Date | null): boolean => {
+      if (!date) return false;
+      const day = date.getDay();
+      return day !== 0 && day !== 6; // 0 = domingo, 6 = sábado
+    };
+
+    /** Valida horario entre 08:00 y 18:00 */
+    horaValidaValidator(control: any) {
+      if (!control.value) return null;
+
+      const [hora, minutos] = control.value.split(':').map(Number);
+      const totalMin = hora * 60 + minutos;
+
+      const min = 8 * 60;
+      const max = 18 * 60;
+
+      return totalMin >= min && totalMin <= max
+        ? null
+        : { horaInvalida: true };
+    }
 
   creacionTurno(): void {
     if(this.form.valid){

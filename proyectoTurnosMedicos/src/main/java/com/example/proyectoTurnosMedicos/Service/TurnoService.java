@@ -17,4 +17,5 @@ public interface TurnoService {
     Turno findTurnoById(Long id_turno);
     boolean reservarTurno(Long id_turno);
     List<Turno> findTurnosReservados(Long id_medico);
+    List<Turno> getTurnosPorMedicos(List<Long> idList);
 }

@@ -2,6 +2,7 @@ package com.example.proyectoTurnosMedicos.Controller;
 
 
 import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaDto;
+import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaRequestCancelDto;
 import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaRequestDto;
 import com.example.proyectoTurnosMedicos.Entity.Reserva;
 import com.example.proyectoTurnosMedicos.Service.ReservaService;
@@ -25,7 +26,7 @@ public class ReservaController {
     }
 
     // el paciente puede cancelar una reserva, pero medico y admin tambien
-    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'PACIENTE', 'RECEPCIONISTA')")
     @DeleteMapping("/pacientes/turnos/delete-reserva/{id_reserva}")
     public void deleteReserva(@PathVariable Long id_reserva){
         reservaService.deleteReserva(id_reserva);
@@ -43,6 +44,12 @@ public class ReservaController {
     @GetMapping("/paciente/{id_paciente}/get-reservas")
     public List<ReservaDto> reservasPaciente(@PathVariable Long id_paciente){
         return reservaService.getReservasPaciente(id_paciente);
+    }
+
+    @PreAuthorize("hasAnyRole('RECEPCIONISTA')")
+    @PostMapping("/reservas/cancelar/buscar")
+    public ReservaDto buscarReservaParaCancelar(@RequestBody ReservaRequestCancelDto res ){
+        return reservaService.getReservaEspecifica(res);
     }
 
 }

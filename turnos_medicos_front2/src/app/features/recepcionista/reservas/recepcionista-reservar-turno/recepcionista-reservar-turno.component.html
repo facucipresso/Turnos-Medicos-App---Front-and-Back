@@ -11,12 +11,30 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email del Paciente</mat-label>
         <input matInput formControlName="email" type="email">
+        <mat-error *ngIf="paso1Form.get('email')?.hasError('required')">
+          El email es obligatorio
+        </mat-error>
+        
+        <mat-error *ngIf="paso1Form.get('email')?.hasError('email')">
+          El formato del email no es válido
+        </mat-error>
       </mat-form-field>
 
       <!-- DNI -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>DNI del Paciente</mat-label>
         <input matInput formControlName="dni" type="text">
+        <mat-error *ngIf="paso1Form.get('dni')?.hasError('required')">
+          El DNI es obligatorio
+        </mat-error>
+        
+        <mat-error *ngIf="paso1Form.get('dni')?.hasError('pattern')">
+          El DNI debe tener 7 u 8 números
+        </mat-error>
+
+        <mat-error *ngIf="pacienteNoExiste">
+          No existe un paciente con ese email y DNI
+        </mat-error>
       </mat-form-field>
 
       <!-- Obra Social -->
@@ -30,6 +48,13 @@
         </mat-select>
       </mat-form-field>
 
+      <div *ngIf="pacienteNoExiste" class="paciente-no-existe">
+        <mat-icon color="warn">warning</mat-icon>
+        <span>
+          Paciente no registrado. Verifique los datos o regístrelo.
+        </span>
+      </div>
+
     <!-- </div> -->
 
     <!-- Paso 2 -->
@@ -37,7 +62,7 @@
       <!-- Selector de Especialidad (DENTRO DEL FORM!!) -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Especialidad</mat-label>
-        <mat-select formControlName="especialidadId">
+        <mat-select formControlName="especialidadId" [disabled]="!paso1Completado">
           <mat-option value="">-- Seleccionar Especialidad --</mat-option>
           <mat-option *ngFor="let esp of especialidades" [value]="esp.id">
             {{ esp.nombre }}
@@ -48,9 +73,15 @@
     </div>
 
     <!-- MÉDICOS -->
-    <mat-form-field appearance="outline" class="full-width" *ngIf="paso2Completado">
+    <!-- Si no hay medicos de esa especialidad -->
+    <div *ngIf="paso1Completado && paso2Completado && medicosFiltrados.length === 1" class="sin-turnos">
+      Actualmente no existen médicos para la especialidad seleccionada.
+    </div>
+
+
+    <mat-form-field appearance="outline" class="full-width" *ngIf="paso2Completado && medicosFiltrados.length > 1">
       <mat-label>Médico</mat-label>
-      <mat-select formControlName="medicoId">
+      <mat-select formControlName="medicoId" [disabled]="!paso1Completado || !paso2Completado">
         <mat-option value="">-- Seleccionar Médico --</mat-option>
         <mat-option *ngFor="let med of medicosFiltrados" [value]="med.id">
           {{ med.nombre }}
@@ -58,7 +89,7 @@
       </mat-select>
     </mat-form-field>
 
-    <div *ngIf="turnosDisponibles.length > 0" class="turnos-wrapper">
+    <div *ngIf="turnosDisponibles.length > 0 && paso3Completado && paso2Completado && paso1Completado" class="turnos-wrapper">
       <h3>Turnos disponibles</h3>
 
       <ul class="turnos-list">
@@ -79,9 +110,14 @@
       </ul>
     </div>
 
-    <!-- Si no hay turnos -->
-    <div *ngIf="paso3Completado && turnosDisponibles.length === 0" class="sin-turnos">
-      El médico no tiene turnos disponibles.
+    <!-- Si no hay turnos disponibles-->
+    <div *ngIf="paso3Completado && todosLosTurnos.length === 0" class="sin-turnos">
+      Médico sin turnos disponibles por cuestiones personales.
+    </div>
+
+    <!-- Si no hay turnos porque no tiene dados-->
+    <div *ngIf="paso3Completado && turnosDisponibles.length === 0 && todosLosTurnos.length > 0" class="sin-turnos">
+      Médico sin turnos disponibles por agenda llena.
     </div>
 
 

@@ -55,5 +55,9 @@ export class TurnoService {
   getTurno(idTurno: number): Observable<Turno> {
     return this.http.get<Turno>(`${this.apiUrl}/medico/find-turno/${idTurno}`);
   }
+
+  getTurnosDispDeTodosLosMeds(idsMedicos : number[]) : Observable<Turno[]> {
+    return this.http.post<Turno[]>(`${this.apiUrl}/turnos/por-medicos`, idsMedicos);
+  }
   
 }

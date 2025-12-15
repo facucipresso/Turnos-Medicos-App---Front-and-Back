@@ -104,8 +104,9 @@ public class TurnoServiceImp implements TurnoService{
         LocalDate hoy = LocalDate.now();
         LocalTime horaActual = LocalTime.now();
 
+        // ESTO ESTA MAL, DEBERIA FILTRAR SOLO POR LA FECHA, PORQUE TENGO OTRO ENDPOINT QUE EL MED VE TODOS LOS TURNOS, LOS RESERVADOS Y LOS NO RESERVADOS
         return m.getTurnos().stream()
-                .filter(t -> !t.isReservado()) // turnos NO reservados
+                //.filter(t -> !t.isReservado()) turnos NO reservados
                 .filter(t -> {
                     // Si la fecha del turno es después de hoy -> válido
                     if (t.getDiaTurno().isAfter(hoy)) {
@@ -154,5 +155,42 @@ public class TurnoServiceImp implements TurnoService{
             }
         }
         return turnosReservados;
+    }
+
+    @Override
+    public List<Turno> getTurnosPorMedicos(List<Long> idList) {
+
+        List<Medico> medss = medicoRepository.findAllById(idList);
+
+        if (medss.size() != idList.size()) {
+            throw new ResourceNotFoundException("Alguno de los médicos no existe");
+        }
+
+        List<Turno> turnosOk = new ArrayList<Turno>();
+        LocalDate hoy = LocalDate.now();
+        LocalTime ahora = LocalTime.now();
+
+        for (Medico m : medss){
+            List<Turno> turnosPorMed = (m.getTurnos().stream()
+                    .filter(t -> !t.isReservado()) //turnos NO reservados
+                    .filter(t -> {
+                        // Si la fecha del turno es después de hoy -> válido
+                        if (t.getDiaTurno().isAfter(hoy)) {
+                            return true;
+                        }
+
+                        // Si es hoy → comparar hora
+                        if (t.getDiaTurno().isEqual(hoy)) {
+                            return !t.getHoraTurno().isBefore(ahora);
+                        }
+
+                        // Si es antes de hoy, descartar
+                        return false;
+                    })
+                    .toList());
+            turnosOk.addAll(turnosPorMed);
+        }
+
+        return turnosOk;
     }
 }
