@@ -1,20 +1,25 @@
 <div class="tabla-wrapper">
-<!--especialidades-->
+  <!--especialidades-->
   <div class="acciones-header">
     <mat-card-title>Listado de Médicos</mat-card-title>
     <button mat-raised-button color="primary" (click)="irACrearMedico()">
       <mat-icon>add</mat-icon> Agregar Médico
     </button>
-    
+
   </div>
-  <div class="acciones-header">
-    <mat-card-title>Aca va a ir el buscador ---------------------------------------
-    </mat-card-title>
+  <div>
+    <mat-form-field appearance="outline" class="full-width buscador">
+      <mat-label>Buscar médico</mat-label>
+      <input matInput placeholder="Buscar por matrícula o apellido" #buscador (input)="filtrarMedicos(buscador.value)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
   </div>
 
   <p *ngIf="medicos.length === 0" class="sin-datos">No hay médicos registrados</p>
 
-  <table mat-table [dataSource]="medicos" class="mat-elevation-z2 medico-table" *ngIf="medicos.length > 0">
+  <table mat-table [dataSource]="medicosFiltrados" class="mat-elevation-z2 medico-table"
+    *ngIf="medicosFiltrados.length > 0">
 
     <!-- Columna Nombre -->
     <ng-container matColumnDef="nombre">
@@ -22,11 +27,11 @@
       <td mat-cell *matCellDef="let med"> {{ med.nombre }} {{ med.apellido }} </td>
     </ng-container>
 
-    <!-- Columna Especialidad -->
-    <!-- <ng-container matColumnDef="especialidad">
-      <th mat-header-cell *matHeaderCellDef> Especialidad </th>
-      <td mat-cell *matCellDef="let med"> {{ obtenerNombreEspecialidad(med.idEspecialidad) }} </td>
-    </ng-container> -->
+    <!-- Columna Matricula -->
+    <ng-container matColumnDef="matricula">
+      <th mat-header-cell *matHeaderCellDef> Matrícula </th>
+      <td mat-cell *matCellDef="let med"> {{ med.matricula }} </td>
+    </ng-container>
 
     <ng-container matColumnDef="especialidades">
       <th mat-header-cell *matHeaderCellDef> Especialidades </th>
@@ -37,20 +42,32 @@
       </td>
     </ng-container>
 
+    <!-- Columna DNI -->
+    <ng-container matColumnDef="dni">
+      <th mat-header-cell *matHeaderCellDef> DNI </th>
+      <td mat-cell *matCellDef="let med"> {{ med.dni }} </td>
+    </ng-container>
+
+    <!-- Columna Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let med"> {{ obtenerEmail(med.id) }} </td>
+    </ng-container>
+
     <!-- Columna Obras Sociales -->
 
-<ng-container matColumnDef="obrassociales">
-  <th mat-header-cell *matHeaderCellDef> Obras Sociales </th>
+    <ng-container matColumnDef="obrassociales">
+      <th mat-header-cell *matHeaderCellDef> Obras Sociales </th>
 
-  <td mat-cell *matCellDef="let med">
-    <div *ngIf="obtenerObrasSocialesDeMedico(med.id).length > 0; else sinOS">
-      {{ obtenerObrasSocialesDeMedico(med.id) }}
-    </div>
-    <ng-template #sinOS>
-      Sin obras sociales
-    </ng-template>
-  </td>
-</ng-container>
+      <td mat-cell *matCellDef="let med">
+        <div *ngIf="obtenerObrasSocialesDeMedico(med.id).length > 0; else sinOS">
+          {{ obtenerObrasSocialesDeMedico(med.id) }}
+        </div>
+        <ng-template #sinOS>
+          Sin obras sociales
+        </ng-template>
+      </td>
+    </ng-container>
 
 
     <!-- Columna Acciones -->
@@ -61,16 +78,16 @@
           <mat-icon>delete</mat-icon>
         </button>
         <!-- Descomentar si quiero editar un medico  desde el front -->
-        <!--
+        
         <button mat-icon-button color="primary" (click)="editMedico(med.id)" matTooltip="Editar">
           <mat-icon>edit</mat-icon>
         </button>
-        -->
+        
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidades', 'obrassociales', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidades','obrassociales', 'acciones'];"></tr>
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'matricula','dni','email' ,'especialidades', 'obrassociales', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'matricula', 'dni','email', 'especialidades','obrassociales', 'acciones'];"></tr>
 
   </table>
 </div>

@@ -1,5 +1,5 @@
 .tabla-wrapper {
-  max-width: 800px;
+  max-width: 1300px;
   margin: 0 auto;
   overflow-x: auto;
   border-radius: 6px;
@@ -57,4 +57,9 @@
   font-style: italic;
   color: #666;
   margin-bottom: 16px;
+}
+
+
+.buscador{
+  width: 400px;
 }

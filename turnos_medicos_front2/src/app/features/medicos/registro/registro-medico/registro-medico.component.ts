@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MedicosService } from '../../medicos.service';
+import { MedicoFullDto } from '../../medicoFull-dto.model';
 
 @Component({
   selector: 'app-registro-medico',
@@ -31,6 +32,7 @@ export class RegistroMedicoComponent implements OnInit{
 
   form: FormGroup;
   adminId?: number;
+  medicos: MedicoFullDto[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -46,11 +48,38 @@ export class RegistroMedicoComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      const idParam = this.route.parent?.snapshot.paramMap.get('id_administrador');
-  if (idParam) {
-    this.adminId = Number(idParam);
+    const idParam = this.route.parent?.snapshot.paramMap.get('id_administrador');
+    if (idParam) {
+      this.adminId = Number(idParam);
+    }
+
+    this.medicoService.getMedicosFull().subscribe(data => {
+      this.medicos = data;
+
+      const emailControl = this.form.get('email');
+      emailControl?.addValidators(this.emailExistenteValidator());
+      emailControl?.updateValueAndValidity();
+    });
   }
-  }
+
+  //buscarEmail(email: string): boolean {
+    //return this.medicos.some(medico => medico.email === email);
+  //}
+ 
+  emailExistenteValidator() {
+  return (control: any) => {
+    if (!control.value || this.medicos.length === 0) {
+      return null;
+    }
+
+    const existe = this.medicos.some(
+      medico => medico.email === control.value
+    );
+
+    return existe ? { emailExistente: true } : null;
+  };
+}
+
 
   registrar() {
     if (this.form.invalid) {

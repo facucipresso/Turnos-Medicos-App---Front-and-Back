@@ -46,51 +46,49 @@ public class MedicoServiceImp implements MedicoService{
     }
 
     @Override
-    public MedicoDto createMedico(MedicoDto medicoDto) {
-        if (isNullOrBlank(medicoDto.getNombre()) || isNullOrBlank(medicoDto.getApellido()) || isNullOrBlank(medicoDto.getDireccion()) || medicoDto.getIdEspecialidades() == null) {
+    public MedicoFullDto createMedico(MedicoFullDto medicoFullDto) {
+        if (isNullOrBlank(medicoFullDto.getNombre()) || isNullOrBlank(medicoFullDto.getApellido()) || isNullOrBlank(medicoFullDto.getDireccion()) || medicoFullDto.getIdEspecialidades() == null) {
             throw new BadRequestException("Campos incompletos");
         }
 
-        //esta lista y el foreach lo hice por que ahora puede tener varias especialidades
         List<Especialidad> especialidades = new ArrayList<Especialidad>();
-
-        for(Long idEspec : medicoDto.getIdEspecialidades()){
+        for(Long idEspec : medicoFullDto.getIdEspecialidades()){
             Especialidad esp = especialidadRepository.findById(idEspec).
                     orElseThrow(() -> new BadRequestException("Una de las especialidades no fue encontrada"));
             especialidades.add(esp);
         }
 
-        //esto lo saque estaba antes cuando tenia una sola especialidad el medico
-        /*Especialidad espe = especialidadRepository.findById(medicoDto.getIdEspecialidad()).
-                orElseThrow(() -> new BadRequestException("Especialidad no encontrada"));*/
+        List<ObraSocial> obrasSociales = new ArrayList<ObraSocial>();
+        for(Long idObraS : medicoFullDto.getIdObrasSociales()){
+            ObraSocial os = obraSocialRepository.findById(idObraS).
+                    orElseThrow(() -> new BadRequestException("Una de las obras sociales no fue encontrada"));
+            obrasSociales.add(os);
+        }
 
-        Usuario usuario = usuarioRepository.findById(medicoDto.getIdUsuario()).
+        Usuario usuario = usuarioRepository.findById(medicoFullDto.getIdUsuario()).
                 orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        /*ESTO LO TENGO QUE HACER EN USUARIO
-        if(medicoRepository.findMedicoByEmail(medicoDto.getEmail()).isPresent() || pacienteRepository.findPacienteByEmail(medicoDto.getEmail()).isPresent()){
-            throw new BadRequestException("Ya existe un usuario con ese Email");
-        }*/
+
         Medico medico = new Medico();
-        medico.setDni(medicoDto.getDni());
-        medico.setMatricula(medicoDto.getMatricula());
-        medico.setNombre(medicoDto.getNombre());
-        medico.setApellido(medicoDto.getApellido());
-        medico.setDireccion(medicoDto.getDireccion());
-        //medico.setEmail(medicoDto.getEmail());
+        medico.setDni(medicoFullDto.getDni());
+        medico.setMatricula(medicoFullDto.getMatricula());
+        medico.setNombre(medicoFullDto.getNombre());
+        medico.setApellido(medicoFullDto.getApellido());
+        medico.setDireccion(medicoFullDto.getDireccion());
         medico.setEspecialidades(especialidades);
+        medico.setObrasSociales(obrasSociales);
         medico.setUsuario(usuario);
 
         Medico med = medicoRepository.save(medico);
-        medicoDto.setId(med.getId());
-        medicoDto.setDni(med.getDni());
-        medicoDto.setNombre(med.getNombre());
-        medicoDto.setApellido(med.getApellido());
-        medicoDto.setDireccion(med.getDireccion());
-        //medicoDto.setEmail(med.getEmail());
-        medicoDto.setIdEspecialidades(medicoDto.getIdEspecialidades());
-        medicoDto.setIdUsuario(med.getUsuario().getId());
+        medicoFullDto.setId(med.getId());
+        medicoFullDto.setDni(med.getDni());
+        medicoFullDto.setNombre(med.getNombre());
+        medicoFullDto.setApellido(med.getApellido());
+        medicoFullDto.setDireccion(med.getDireccion());
+        medicoFullDto.setIdEspecialidades(medicoFullDto.getIdEspecialidades());
+        medicoFullDto.setIdObrasSociales(medicoFullDto.getIdObrasSociales());
+        medicoFullDto.setIdUsuario(med.getUsuario().getId());
 
-        return medicoDto;
+        return medicoFullDto;
     }
 
     @Override
@@ -137,6 +135,7 @@ public class MedicoServiceImp implements MedicoService{
                 idObrasSociales.add(obra.getId());
             }
             MedicoFullDto medicoFullDto = new MedicoFullDto();
+            medicoFullDto.setMatricula(m.getMatricula());
             medicoFullDto.setId(m.getId());
             medicoFullDto.setDni(m.getDni());
             medicoFullDto.setNombre(m.getNombre());
@@ -152,46 +151,60 @@ public class MedicoServiceImp implements MedicoService{
     }
 
     @Override
-    public MedicoDto updateMedico(Long id_medico, MedicoDto medicoDto) {
-        if(isNullOrBlank(medicoDto.getNombre()) || isNullOrBlank(medicoDto.getApellido()) || isNullOrBlank(medicoDto.getDireccion()) || medicoDto.getIdEspecialidades() == null){
+    public MedicoFullDto updateMedico(Long id_medico, MedicoFullDto medicoDto) {
+        if(isNullOrBlank(medicoDto.getNombre()) ||
+                isNullOrBlank(medicoDto.getApellido())
+                || isNullOrBlank(medicoDto.getDireccion())
+                || medicoDto.getIdEspecialidades() == null){
             throw new BadRequestException("Campos incompletos");
         }
         Medico med0 = medicoRepository.findById(id_medico).
                 orElseThrow(()->new ResourceNotFoundException("Medico no encotrado"));
 
-        /*Especialidad especialidad = especialidadRepository.findById(medicoDto.getIdEspecialidad()).
-                orElseThrow(()-> new ResourceNotFoundException("Especialidad no encontrada"));*/
-
         List<Especialidad> especialidadess = new ArrayList<Especialidad>();
-
         for(Long idEspe : medicoDto.getIdEspecialidades()){
             Especialidad especialidad = especialidadRepository.findById(idEspe).
                     orElseThrow(() -> new BadRequestException("Una de las especialidades no fue encontrada"));
             especialidadess.add(especialidad);
         }
+
+        List<ObraSocial> obrasSociales = new ArrayList<ObraSocial>();
+        for(Long idObra : medicoDto.getIdObrasSociales()){
+            ObraSocial os = obraSocialRepository.findById(idObra).
+                    orElseThrow(() -> new BadRequestException("Una de las obras sociales no fue encontrada"));
+            obrasSociales.add(os);
+        }
+
         Usuario usuario = usuarioRepository.findById(medicoDto.getIdUsuario()).
                 orElseThrow(()-> new ResourceNotFoundException("Usuario no encontrado"));
 
+        usuario.setEmail(medicoDto.getEmail());
+
+        usuarioRepository.save(usuario);
+
         med0.setDni(medicoDto.getDni());
+        med0.setMatricula(medicoDto.getMatricula());
         med0.setNombre(medicoDto.getNombre());
         med0.setApellido(medicoDto.getApellido());
         med0.setDireccion(medicoDto.getDireccion());
-        //med0.setEmail(medicoDto.getEmail());
         med0.setEspecialidades(especialidadess);
+        med0.setObrasSociales(obrasSociales);
         med0.setUsuario(usuario);
 
         Medico medico1 = medicoRepository.save(med0);
-        MedicoDto mdto = new MedicoDto();
-        mdto.setId(medico1.getId());
-        mdto.setDni(medico1.getDni());
-        mdto.setNombre(medico1.getNombre());
-        mdto.setApellido(medico1.getApellido());
-        mdto.setDireccion(medico1.getDireccion());
-        //mdto.setEmail(medico1.getEmail());
-        mdto.setIdEspecialidades(mdto.getIdEspecialidades());
-        mdto.setIdUsuario(medico1.getUsuario().getId());
 
-        return mdto;
+        MedicoFullDto mfulldto = new MedicoFullDto();
+        mfulldto.setId(medico1.getId());
+        mfulldto.setDni(medico1.getDni());
+        mfulldto.setNombre(medico1.getNombre());
+        mfulldto.setApellido(medico1.getApellido());
+        mfulldto.setDireccion(medico1.getDireccion());
+        mfulldto.setEmail(medicoDto.getEmail());
+        mfulldto.setIdUsuario(medico1.getUsuario().getId());
+        mfulldto.setIdObrasSociales(medicoDto.getIdObrasSociales());
+        mfulldto.setIdEspecialidades(medicoDto.getIdEspecialidades());
+
+        return mfulldto;
     }
 
     @Override

@@ -9,10 +9,10 @@ import java.util.Set;
 
 public interface MedicoService {
     Medico agregarObraSocial(Long id_medico, Long id_obraSocial);
-    MedicoDto createMedico(MedicoDto medicoDto);
+    MedicoFullDto createMedico(MedicoFullDto medicoFullDto);
     List<MedicoDto> findAllMedicos();
     List<MedicoFullDto> findAllMedicosFull();
-    MedicoDto updateMedico(Long id_medico, MedicoDto medicoDto);
+    MedicoFullDto updateMedico(Long id_medico, MedicoFullDto medicoFullDto);
     Medico findMedicoById(Long id_medico);
     void deleteMedicoById(Long id_medico);
     Medico deleteObraSocial(Long id_medico, Long id_obraSocial);

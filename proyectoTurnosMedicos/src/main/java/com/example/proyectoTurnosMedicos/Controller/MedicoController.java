@@ -20,15 +20,15 @@ public class MedicoController {
     // el admin agrega un medico al sistema
     @PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
     @PostMapping("/medicos/create")
-    public MedicoDto createMedico(@RequestBody MedicoDto medicoDto){
-        return medicoService.createMedico(medicoDto);
+    public MedicoFullDto createMedico(@RequestBody MedicoFullDto medicoFullDto){
+        return medicoService.createMedico(medicoFullDto);
     }
 
     //el admin actualiza datos de un medico
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/admin/medicos/updateMedico/{id_medico}")
-    public MedicoDto updateMedico(@PathVariable Long id_medico, @RequestBody MedicoDto medicoDto){
-        return medicoService.updateMedico(id_medico, medicoDto);
+    public MedicoFullDto updateMedico(@PathVariable Long id_medico, @RequestBody MedicoFullDto medicoFullDto){
+        return medicoService.updateMedico(id_medico, medicoFullDto);
     }
 
     //el admin se trae un madico, TIENE QUE DEVOLVER UN MEDICO

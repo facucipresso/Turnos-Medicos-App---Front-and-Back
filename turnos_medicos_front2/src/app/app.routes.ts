@@ -30,6 +30,7 @@ import { RegistroPacienteComponent } from './features/pacientes/regitro/registro
 import { UsuarioLoginComponent } from './features/Usuarios/usuario-login/usuario-login.component';
 
 import { AuthGuard } from './core/guards/auth.guard';
+import { EditmedicoComponent } from './features/medicos/editmedico/editmedico.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +97,7 @@ export const routes: Routes = [
           { path: 'especialidades/nueva', component: EspecialidadesFormComponent },
           { path: 'especialidades/editar/:id', component: EspecialidadesFormComponent },
           { path: 'medicos', component: MedicoListComponent },
+          { path: 'medicos/editar', component: EditmedicoComponent },
           { path: 'pacientes', component: PacienteListComponent },
           { path: 'pacientes/editar/:id_paciente', component: PacienteFormComponent },
           { path: 'registro', component: RegistroMedicoComponent},//toma email y contra

@@ -1,29 +1,41 @@
 <div class="registro-wrapper">
-    <mat-card class="registro-card">
-      <h2>Registro de Medico</h2>
-  
-      <form [formGroup]="form" (ngSubmit)="registrar()">
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
-            El email es obligatorio y debe tener un formato válido
-          </mat-error>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Contraseña</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
-            La contraseña es obligatoria (mínimo 6 caracteres)
-          </mat-error>
-        </mat-form-field>
-  
-        <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
-          Registrarse
-        </button>
-      </form>
-  
-    </mat-card>
-  </div>
+  <mat-card class="registro-card">
+    <h2>Registro de Medico</h2>
+
+    <form [formGroup]="form" (ngSubmit)="registrar()">
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+
+        <!-- Email requerido -->
+        <mat-error *ngIf="form.get('email')?.hasError('required')">
+          Email requerido
+        </mat-error>
+
+        <!-- Formato inválido -->
+        <mat-error *ngIf="form.get('email')?.hasError('email')">
+          El email debe tener un formato válido
+        </mat-error>
+
+        <!-- Email ya registrado -->
+        <mat-error *ngIf="form.get('email')?.hasError('emailExistente')">
+          Email ya registrado
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          La contraseña es obligatoria (mínimo 6 caracteres)
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="form.invalid">
+        Registrarse
+      </button>
+    </form>
+
+  </mat-card>
+</div>
