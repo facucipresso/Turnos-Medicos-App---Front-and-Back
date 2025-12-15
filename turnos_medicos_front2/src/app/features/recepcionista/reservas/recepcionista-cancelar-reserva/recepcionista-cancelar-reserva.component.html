@@ -1,0 +1,214 @@
+<div class="form-wrapper">
+
+    <h2> Cancelar Reservar de Turno</h2>
+
+    <form [formGroup]="formBusqueda" class="reserva-form">
+
+        <!-- DNI -->
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>DNI del Paciente</mat-label>
+        <input matInput formControlName="dni" />
+        <mat-error *ngIf="formBusqueda.get('dni')?.hasError('pattern')">
+            El DNI debe tener 7 u 8 números
+        </mat-error>
+        </mat-form-field>
+    
+        <!-- <div class="separador">O</div> -->
+    
+        <!-- Nombre -->
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del paciente</mat-label>
+        <input matInput formControlName="nombrePaciente" />
+        </mat-form-field>
+    
+        <!-- Apellido -->
+        <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Apellido del paciente</mat-label>
+        <input matInput formControlName="apellidoPaciente" />
+        </mat-form-field>
+    
+        <!-- Error cruzado -->
+        <mat-error *ngIf="formBusqueda.hasError('dniONombreRequerido')">
+        Debe ingresar DNI o Nombre y Apellido del paciente
+        </mat-error>
+
+        <!-- PASO 2 -->
+        <!-- <ng-container *ngIf="paso1Valido"> -->
+
+            <!-- FECHA -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fecha del Turno</mat-label>
+                <input
+                    matInput
+                    [matDatepicker]="picker"
+                    [min]="minDate"
+                    [matDatepickerFilter]="filtroFechas"
+                    formControlName="fecha">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            
+                <mat-error *ngIf="formBusqueda.get('fecha')?.hasError('required')">
+                    La fecha es obligatoria
+                </mat-error>
+
+                <mat-error *ngIf="formBusqueda.get('fecha')?.hasError('fechaPasada')">
+                    No se puede eliminar una reserva de turno cuya fecha ya pasó
+                </mat-error>
+            </mat-form-field>
+        
+            <!-- HORA -->
+            <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Hora</mat-label>
+            <input
+                matInput
+                type="time"
+                min="08:00"
+                max="18:00"
+                formControlName="hora">
+        
+            <mat-error *ngIf="formBusqueda.get('hora')?.hasError('required')">
+                La hora es obligatoria
+            </mat-error>
+        
+            <mat-error *ngIf="formBusqueda.get('hora')?.hasError('horaInvalida')">
+                El horario debe ser entre 08:00 y 18:00
+            </mat-error>
+            </mat-form-field>
+
+                    <!-- Nombre -->
+            <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del medico</mat-label>
+            <input matInput formControlName="nombreMedico" />
+            </mat-form-field>
+        
+            <!-- Apellido -->
+            <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Apellido del medico</mat-label>
+            <input matInput formControlName="apellidoMedico" />
+            </mat-form-field>
+        
+            <!-- Error cruzado -->
+            <mat-error *ngIf="formBusqueda.hasError('nombreRequerido')">
+            Debe ingresar Nombre y Apellido del Medico.
+            </mat-error>
+
+            <button mat-raised-button color="primary" (click)="buscarReserva()" [disabled]="!paso1Valido || !paso2Valido">
+                Buscar reserva
+            </button>
+        <!-- </ng-container> -->    
+    </form>
+
+<!--     <mat-card *ngIf="reservaEncontrada" class="reserva-card">
+
+        <mat-card-title>
+          Reserva encontrada
+        </mat-card-title>
+      
+        <mat-card-content>
+      
+          <p><strong>Paciente:</strong>
+            {{ reservaEncontrada.apellidoPaciente }},
+            {{ reservaEncontrada.nombrePaciente }}
+          </p>
+      
+          <p><strong>Médico:</strong>
+            {{ reservaEncontrada.apellidoMedico }}
+            <span *ngIf="reservaEncontrada.especialidadMedico">
+              ({{ reservaEncontrada.especialidadMedico }})
+            </span>
+          </p>
+      
+          <p><strong>Fecha:</strong> {{ reservaEncontrada.fechaReserva }}</p>
+          <p><strong>Hora:</strong> {{ reservaEncontrada.horaReserva }}</p>
+          <p><strong>Obra Social:</strong> {{ reservaEncontrada.nombreObraSocial }}</p>
+      
+        </mat-card-content>
+      
+        <mat-card-actions align="end">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="confirmarCancelacion()">
+            Cancelar reserva
+          </button>
+        </mat-card-actions>
+      
+      </mat-card> -->
+
+      <mat-card *ngIf="reservaEncontrada" class="reserva-card">
+
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="primary">event_available</mat-icon>
+      
+          <mat-card-title>Reserva encontrada</mat-card-title>
+          <mat-card-subtitle>
+            Verificá los datos antes de cancelar
+          </mat-card-subtitle>
+        </mat-card-header>
+      
+        <mat-divider></mat-divider>
+      
+        <mat-card-content class="reserva-detalle">
+      
+          <div class="detalle-item">
+            <mat-icon>person</mat-icon>
+            <span>
+              <strong>Paciente:</strong>
+              {{ reservaEncontrada.apellidoPaciente }},
+              {{ reservaEncontrada.nombrePaciente }}
+            </span>
+          </div>
+      
+          <div class="detalle-item">
+            <mat-icon>medical_services</mat-icon>
+            <span>
+              <strong>Médico:</strong>
+              {{ reservaEncontrada.apellidoMedico }}
+              <span *ngIf="reservaEncontrada.especialidadMedico">
+                ({{ reservaEncontrada.especialidadMedico }})
+              </span>
+            </span>
+          </div>
+      
+          <div class="detalle-item">
+            <mat-icon>calendar_today</mat-icon>
+            <span>
+              <strong>Fecha:</strong>
+              {{ reservaEncontrada.fechaReserva | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+      
+          <div class="detalle-item">
+            <mat-icon>schedule</mat-icon>
+            <span>
+              <strong>Hora:</strong>
+              {{ reservaEncontrada.horaReserva }}
+            </span>
+          </div>
+      
+          <div class="detalle-item">
+            <mat-icon>badge</mat-icon>
+            <span>
+              <strong>Obra social:</strong>
+              {{ reservaEncontrada.nombreObraSocial }}
+            </span>
+          </div>
+      
+        </mat-card-content>
+      
+        <mat-divider></mat-divider>
+      
+        <mat-card-actions align="end">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="confirmarCancelacion()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar reserva
+          </button>
+        </mat-card-actions>
+      
+      </mat-card>
+      
+
+</div>

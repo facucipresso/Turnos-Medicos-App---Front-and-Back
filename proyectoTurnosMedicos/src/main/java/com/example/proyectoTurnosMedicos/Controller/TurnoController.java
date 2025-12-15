@@ -64,4 +64,9 @@ public class TurnoController {
     public boolean reservarTurno(@PathVariable Long id_turno){
         return turnoService.reservarTurno(id_turno);
     }
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO', 'RECEPCIONISTA')")
+    @PostMapping("/turnos/por-medicos")
+    public List<Turno> getTurnosPorMedicos(@RequestBody List<Long> idsMedicos) {
+        return turnoService.getTurnosPorMedicos(idsMedicos);
+    }
 }

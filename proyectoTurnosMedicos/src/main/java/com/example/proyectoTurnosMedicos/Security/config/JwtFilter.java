@@ -32,6 +32,14 @@ public class JwtFilter extends OncePerRequestFilter {
           HttpServletResponse → representa la respuesta HTTP que vas a devolver.
           FilterChain → permite que después de tu filtro, otros filtros de Spring sigan ejecutándose.*/
 
+        String path = request.getServletPath();
+
+        // IGNORAR ENDPOINTS DE AUTH
+        if (path.startsWith("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //header de autorizacion que vamos a necesitar, viene del encabezado de autorizacion (de postman por ej)
         final String authHeader = request.getHeader("Authorization");
         final String jwt;

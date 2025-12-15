@@ -27,4 +27,7 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     @Query("SELECT m FROM Medico m JOIN m.especialidades e WHERE e.id = :idEspecialidad")
     List<Medico> buscarPorIdEspecialidad(Long idEspecialidad);
 
+    Optional<Medico> findByNombreAndApellido(String nombre, String apellido);
+    Optional<Medico> findByNombreIgnoreCaseAndApellidoIgnoreCase(String nombre, String apellido);
+
 }

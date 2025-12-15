@@ -18,6 +18,7 @@ import { HistorialMedicoAddComponent } from './features/historial-medico/histori
 import { HistorialMedicoListComponent } from './features/historial-medico/historial-medico-list/historial-medico-list.component';
 import { RegistroMedicoComponent } from './features/medicos/registro/registro-medico/registro-medico.component';
 import { RecepcionistaReservarTurnoComponent } from './features/recepcionista/reservas/recepcionista-reservar-turno/recepcionista-reservar-turno.component';
+import { RecepcionistaCancelarReservaComponent } from './features/recepcionista/reservas/recepcionista-cancelar-reserva/recepcionista-cancelar-reserva.component';
 
 import { LayoutMedicoComponent } from './layouts/layout-medico/layout-medico.component';
 import { LayoutPacienteComponent } from './layouts/layout-paciente/layout-paciente.component';
@@ -112,7 +113,9 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'reservas', pathMatch: 'full' },
           { path: 'reservas', component: RecepcionistaReservarTurnoComponent },
-          { path: 'pacientes/nuevo', component: PacienteFormComponent }
+          { path: 'pacientes/nuevo', component: PacienteFormComponent },
+          { path: 'reservas/cancelar', component: RecepcionistaCancelarReservaComponent }
+
         ]
       }
     ]

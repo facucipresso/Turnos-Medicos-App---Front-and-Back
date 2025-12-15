@@ -19,4 +19,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
         AND p.dni = :dni
     """)
     Optional<Paciente> findPacienteByEmailAndDni(String email, String dni);
+
+    Optional<Paciente> findByNombreAndApellido(String nombre, String apellido);
+
+    Optional<Paciente> findByDni(String dni);
 }

@@ -20,12 +20,18 @@ import { Turno } from '../../../turnos/turno.model';
 import { TurnoService } from '../../../turnos/turno.service';
 import { Reserva } from '../../../reservas/reservas.model';
 import { ReservaService } from '../../../reservas/reserva.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../../carteles/confirm-dialog/confirm-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
+import { Medico } from '../../../medicos/medico.model';
+
 
 
 @Component({
   selector: 'app-recepcionista-reservar-turno',
   standalone: true,
-  imports: [CommonModule, FormsModule,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule],
+  imports: [CommonModule, FormsModule,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule, MatDialogModule, MatSnackBarModule, MatIconModule],
   templateUrl: './recepcionista-reservar-turno.component.html',
   styleUrl: './recepcionista-reservar-turno.component.css'
 })
@@ -44,12 +50,17 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
   medicosFiltrados: MedicoDto[] = [];
 
   turnosDisponibles: Turno[] = [];
+  todosLosTurnos: Turno[] = [];
+
 
   medicoSeleccionadoId: number | null = null;
 
   paso1Completado = false;
   paso2Completado = false;
   paso3Completado = false;
+
+  pacienteNoExiste = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -58,13 +69,15 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
     private especialidadService: EspecialidadService,
     private medicoService: MedicosService,
     private turnoService: TurnoService,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.paso1Form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      dni: ['', [Validators.required]],
+      dni: ['', [Validators.required, Validators.pattern('^[0-9]{7,8}$')]],
       obraSocialId: ['', Validators.required],
       especialidadId: ['', Validators.required], //esto es para el paso 2
       medicoId: ['']
@@ -82,7 +95,11 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
       )
       .subscribe(() => {
         const {email, dni, obraSocialId} = this.paso1Form.value;
-        if(email && dni && obraSocialId){
+        if(/* email && dni && obraSocialId */
+          this.paso1Form.get('email')?.valid &&
+          this.paso1Form.get('dni')?.valid &&
+          obraSocialId
+        ){
           this.validarPacienteAutomatico();
         }else{
           this.paso1Completado = false;
@@ -147,7 +164,15 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
     const email = this.paso1Form.value.email;
     const dni = this.paso1Form.value.dni;
   
-    if (!email || !dni) return;
+    if (/* !email || !dni */
+      this.paso1Form.get('email')?.invalid ||
+      this.paso1Form.get('dni')?.invalid ||
+      !this.paso1Form.value.obraSocialId
+    ) {
+      this.resetearDesdePaso1();
+      this.pacienteNoExiste = false;
+      return;
+    };
   
     const pacienteEmailyDni: PacienteEmailyDni = { email, dni };
   
@@ -156,12 +181,18 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
         this.pacienteEncontrado = paciente;
         this.obraSeleccionadaId = this.paso1Form.value.obraSocialId;
         this.paso1Completado = true;
+        this.pacienteNoExiste = false;
         this.cargarEspecialidades();
         console.log("Paciente encontrado:", paciente);
       },
       error: () => {
         this.paso1Completado = false;
         this.pacienteEncontrado = null;
+        this.pacienteNoExiste = true;
+
+        this.resetearDesdePaso1();
+
+        console.log("Error: paciente encontrado");
       }
     });
   }
@@ -186,6 +217,8 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
         this.medicosFiltrados = data.filter(
           m => m.idEspecialidades.includes(this.especialidadSeleccionadaId!)
         );
+
+
         const todos: MedicoDto = {
           id: -1, 
           dni: "00000000",
@@ -208,12 +241,34 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
   }
 
   cargarTurnos(): void {
-    if (!this.medicoSeleccionadoId || this.medicoSeleccionadoId === -1) return;
+    if (!this.medicoSeleccionadoId) return;
+
+    if(this.medicoSeleccionadoId === -1){
+      const idsMedicos = this.medicosFiltrados
+        .filter(m => m.id !== -1)
+        .map(m => m.id);
+
+      this.turnoService.getTurnosDispDeTodosLosMeds(idsMedicos)
+        .subscribe({
+          next: turnos => {
+            this.turnosDisponibles = turnos;
+          },
+          error: err => {
+            console.error("Error cargando turnos:", err);
+            this.turnosDisponibles = [];
+          }
+        });
+
+        return;
+    }
   
     this.turnoService.getTurnosDeMedico(this.medicoSeleccionadoId)
       .subscribe({
         next: turnos => {
-          this.turnosDisponibles = turnos.sort((a, b) =>
+          this.todosLosTurnos = turnos;
+          this.turnosDisponibles = turnos
+          .filter(t => !t.reservado)
+          .sort((a, b) =>
             (a.diaTurno + 'T' + a.horaTurno).localeCompare(b.diaTurno + 'T' + b.horaTurno)
           );
           console.log("Turnos disponibles:", this.turnosDisponibles);
@@ -227,28 +282,107 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
 
   reservarTurno(turno: Turno): void {
     if (!this.obraSeleccionadaId || !this.pacienteEncontrado) {
-      alert("Faltan datos para completar la reserva.");
+      this.snackBar.open('Faltan datos para completar la reserva', 'Cerrar', {
+        duration: 3000
+      });
       return;
+      /*alert("Faltan datos para completar la reserva.");
+      return; */
     }
-  
-    const reserva: Reserva = {
-      id: 0,
-      idTurno: turno.id,
-      idPaciente: this.pacienteEncontrado.id,
-      idObraSocial: this.obraSeleccionadaId
-    };
-  
-    this.reservaService.crearReserva(reserva).subscribe({
-      next: () => {
-        alert("¡Turno reservado correctamente!");
-        // Sacar ese turno de la lista
-        this.turnosDisponibles =
-          this.turnosDisponibles.filter(t => t.id !== turno.id);
-      },
-      error: () => {
-        alert("No se pudo reservar el turno.");
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      disableClose: true,
+      data: {
+        mensaje: '¿Está seguro que desea reservar el turno seleccionado?'
       }
     });
+
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (!confirmado) return;
+  
+      const reserva: Reserva = {
+        id: 0,
+        idTurno: turno.id,
+        idPaciente: this.pacienteEncontrado!.id,
+        idObraSocial: this.obraSeleccionadaId!
+      };
+  
+      this.reservaService.crearReserva(reserva).subscribe({
+        next: () => {
+          this.snackBar.open(
+            'El turno ha sido reservado correctamente',
+            'Cerrar',
+            {
+              duration: 3500,
+              panelClass: ['snackbar-success']
+            }
+          );
+  
+          this.turnosDisponibles =
+            this.turnosDisponibles.filter(t => t.id !== turno.id);
+        },
+        error: (err) => {
+          // aca deberia capturar la excepcion y ver si es la de turno solapado y tirar el cartel
+          if (err.status === 400 && err.error?.message) {
+            if(err.error.message == "PACIENTE_TURNO_SOLAPADO"){
+              // Error controlado desde el backend
+              this.snackBar.open(
+                "El paciente ya tiene un turno reservado para ese día y hora.",
+                'Cerrar',
+                {
+                  duration: 50000,
+                  panelClass: ['snackbar-error']
+                }
+              );
+            }else{
+              // Error controlado desde el backend, para med no encotrado, os no encontrada
+              this.snackBar.open(
+                "Algunos datos para completar la reserva no son validos.",
+                'Cerrar',
+                {
+                  duration: 50000,
+                  panelClass: ['snackbar-error']
+                }
+              );
+            }
+            
+          } else {
+            // Error genérico (500, network, etc)
+            this.snackBar.open(
+              'No se pudo reservar el turno correctamente, por favor inténtelo de nuevo',
+              'Cerrar',
+              {
+                duration: 40000,
+                panelClass: ['snackbar-error']
+              }
+            );
+          }
+        }
+      });
+    });
+    
+  }
+
+  private resetearDesdePaso1(): void {
+    this.paso1Completado = false;
+    this.paso2Completado = false;
+    this.paso3Completado = false;
+  
+    this.pacienteEncontrado = null;
+    this.obraSeleccionadaId = null;
+  
+    this.especialidades = [];
+    this.medicosFiltrados = [];
+    this.turnosDisponibles = [];
+  
+    this.paso1Form.patchValue(
+      {
+        especialidadId: '',
+        medicoId: ''
+      },
+      { emitEvent: false }
+    );
   }
   
 }

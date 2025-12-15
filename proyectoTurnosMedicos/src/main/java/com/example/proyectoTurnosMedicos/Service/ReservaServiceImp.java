@@ -3,16 +3,17 @@ package com.example.proyectoTurnosMedicos.Service;
 import com.example.proyectoTurnosMedicos.Entity.*;
 import com.example.proyectoTurnosMedicos.Entity.DTO.PacienteDto;
 import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaDto;
+import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaRequestCancelDto;
 import com.example.proyectoTurnosMedicos.Entity.DTO.ReservaRequestDto;
 import com.example.proyectoTurnosMedicos.Exception.BadRequestException;
 import com.example.proyectoTurnosMedicos.Exception.ResourceNotFoundException;
-import com.example.proyectoTurnosMedicos.Repository.ObraSocialRepository;
-import com.example.proyectoTurnosMedicos.Repository.PacienteRepository;
-import com.example.proyectoTurnosMedicos.Repository.ReservaRepository;
-import com.example.proyectoTurnosMedicos.Repository.TurnoRepository;
+import com.example.proyectoTurnosMedicos.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class ReservaServiceImp implements ReservaService{
     PacienteRepository pacienteRepository;
     @Autowired
     ObraSocialRepository obraSocialRepository;
+
+    @Autowired
+    MedicoRepository medicoRepository;
 
 
     @Override
@@ -55,6 +59,14 @@ public class ReservaServiceImp implements ReservaService{
         Medico med = t.getMedico();
         if(!med.getObrasSociales().contains(os)){
             throw new BadRequestException("El medico no trabaja con esa obra social");
+        }
+
+        // validar que el paciente no tenga un turno reservado ya con ese dia y esa hora
+        List<ReservaDto> reservasDelPaciente = this.getReservasPaciente(reservaRDto.getIdPaciente());
+        for (ReservaDto res : reservasDelPaciente){
+            if(res.getFechaReserva().equals(t.getDiaTurno()) && res.getHoraReserva().equals(t.getHoraTurno()) ){
+                throw new BadRequestException("PACIENTE_TURNO_SOLAPADO");
+            }
         }
 
         Reserva r = new Reserva();
@@ -141,5 +153,48 @@ public class ReservaServiceImp implements ReservaService{
             reservasDtoMedico.add(rdto);
         }
         return  reservasDtoMedico;
+    }
+
+    @Override
+    public ReservaDto getReservaEspecifica(ReservaRequestCancelDto res) {
+        DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDate fechaFormateada = LocalDate.parse(res.getFechaTurno(), formateadorFecha);
+        LocalTime horaFormateada = LocalTime.parse(res.getHoraTurno(), formateadorHora);
+
+        Paciente pac = new Paciente();
+
+        Medico med = medicoRepository.findByNombreAndApellido(res.getNombreMedico(), res.getApellidoMedico())
+                .orElseThrow(()->new ResourceNotFoundException("Medico no encontrado"));
+
+        if(res.getApellidoPaciente() == null && res.getNombrePaciente() == null){
+            pac = pacienteRepository.findByDni(res.getDni())
+                    .orElseThrow(()-> new ResourceNotFoundException("Paciente no encontrado"));
+        }
+
+        if(res.getDni() == null){
+            pac = pacienteRepository.findByNombreAndApellido(res.getNombrePaciente(), res.getApellidoPaciente())
+                    .orElseThrow(()->new ResourceNotFoundException("Paciente no encontrado"));
+        }
+
+
+        List<Reserva> reservasDelPaciente = reservaRepository.getReservasByPaciente_Id(pac.getId());
+        Reserva resEncontrada = reservasDelPaciente.stream().filter(r -> r.getTurno().getMedico().equals(med) &&
+                r.getTurno().getHoraTurno().equals(horaFormateada) &&
+                r.getTurno().getDiaTurno().equals(fechaFormateada))
+                .findFirst()
+                .orElseThrow(()-> new ResourceNotFoundException("PACIENTE_NO_RESERVA_FECHA_MEDICO"));
+
+        ReservaDto respuesta = new ReservaDto();
+        respuesta.setId(resEncontrada.getId());
+        respuesta.setFechaReserva(resEncontrada.getTurno().getDiaTurno());
+        respuesta.setHoraReserva(resEncontrada.getTurno().getHoraTurno());
+        respuesta.setNombrePaciente(pac.getNombre());
+        respuesta.setApellidoPaciente(pac.getApellido());
+        respuesta.setApellidoMedico(resEncontrada.getTurno().getMedico().getApellido());
+        respuesta.setNombreObraSocial(resEncontrada.getObrasocial().getNombreObraSocial());
+
+        return respuesta;
     }
 }
