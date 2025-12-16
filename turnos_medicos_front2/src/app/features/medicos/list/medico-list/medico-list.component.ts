@@ -20,6 +20,7 @@ import { TurnoService } from '../../../turnos/turno.service';
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MedicoFullDto } from '../../medicoFull-dto.model';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 
 @Component({
   selector: 'app-medico-list',
@@ -148,36 +149,51 @@ this.router.navigate(['editar'], { relativeTo: this.route });
   );
 }
 
+existeTurnoReservadoParaMedico(turnos: any[], medicoId: number): boolean {
+  return turnos.some(
+    turno => turno.medico?.id === medicoId && turno.reservado === true
+  );
+}
 
-  eliminarMedico(id: number) {
 
+eliminarMedico(id: number) {
+
+  this.turnoService.obtenerTurnosReservadosDeMedico(id).subscribe(turnos => {
+
+    if (this.existeTurnoReservadoParaMedico(turnos,id)) {
+      this.dialog.open(InfoDialogComponent, {
+        width: '420px',
+        data: {
+          //mensaje: 'El médico seleccionado no se puede eliminar porque tiene turnos reservados.'
+          mensaje: 'No se puede eliminar este médico poque tiene turnos reservados'
+        }
+      });
+      return;
+    }
+
+    // ⬇️ SOLO si NO tiene turnos
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: {
         title: '¿Está seguro de realizar esta operación?'
       }
-  });
+    });
 
-    /*
-    //Esto de aca va a servir para chequear si el medico tiene turnos
-    this.turnoService.obtenerTurnosReservadosDeMedico(id).subscribe(data => {
-      console.log(data);
-    });*/ 
-
-    
     dialogRef.afterClosed().subscribe(confirmado => {
+      if (!confirmado) return;
+
       this.medicoService.eliminarMedico(id).subscribe({
         next: () => {
-          console.log('Médico eliminado con éxito');
           this.medicos = this.medicos.filter(m => m.id !== id);
           this.medicosFiltrados = this.medicosFiltrados.filter(m => m.id !== id);
         },
-        error: err => {
-          console.error('Error al eliminar médico:', err);
-        }
+        error: err => console.error('Error al eliminar médico:', err)
       });
     });
 
-  }
+  });
+
+}
+
 
 }

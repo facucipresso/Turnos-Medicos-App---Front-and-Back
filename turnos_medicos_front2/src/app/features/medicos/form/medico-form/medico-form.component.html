@@ -34,8 +34,16 @@
     La matrícula es requerida
   </mat-error>
 
+    <mat-error *ngIf="form.get('matricula')?.hasError('soloNumeros')">
+    Solo se permiten caracteres numéricos
+  </mat-error>
+
   <mat-error *ngIf="form.get('matricula')?.hasError('maxlength')">
-    La longitud máxima de matrícula es de 10 caracteres
+    La longitud máxima de matrícula es de 8 caracteres
+  </mat-error>
+
+  <mat-error *ngIf="form.get('matricula')?.hasError('minlength')">
+    La longitud mínima de matrícula es de 4 caracteres
   </mat-error>
 
   <mat-error *ngIf="form.get('matricula')?.hasError('matriculaExistente')">

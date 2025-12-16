@@ -69,7 +69,9 @@ export class MedicoFormComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.maxLength(10)
+          this.soloNumerosValidator(),
+          Validators.minLength(4),
+          Validators.maxLength(8)
         ]
       ],
       nombre: [

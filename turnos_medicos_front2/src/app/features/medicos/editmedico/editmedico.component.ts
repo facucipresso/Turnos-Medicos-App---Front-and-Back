@@ -35,6 +35,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 })
 export class EditmedicoComponent implements OnInit {
 
+  medicoConReservas: boolean = false;
   form!: FormGroup;
   adminId!: number;
   medicoEditando: any = null;
@@ -104,7 +105,9 @@ export class EditmedicoComponent implements OnInit {
       matricula: ['', {
         validators: [
           Validators.required,
-          Validators.maxLength(10),
+          Validators.minLength(4),
+          Validators.maxLength(8),
+          this.soloNumerosValidator(),,
           this.matriculaExistenteValidator()
         ],
         updateOn: 'blur'
@@ -257,6 +260,7 @@ export class EditmedicoComponent implements OnInit {
       this.ejecutarCambios();
     }
   });
+
 
 
   }
