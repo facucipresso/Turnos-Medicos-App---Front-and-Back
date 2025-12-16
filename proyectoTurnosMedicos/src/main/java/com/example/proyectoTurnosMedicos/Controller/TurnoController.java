@@ -52,7 +52,7 @@ public class TurnoController {
     }
 
     //medico obtiene sus turnos reservados
-    @PreAuthorize("hasAnyRole('MEDICO')")
+    @PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
     @GetMapping("/medico/{id_medico}/find-turnos-reservados")
     public List<Turno> findTurnosReservados(@PathVariable Long id_medico){
         return turnoService.findTurnosReservados(id_medico);
