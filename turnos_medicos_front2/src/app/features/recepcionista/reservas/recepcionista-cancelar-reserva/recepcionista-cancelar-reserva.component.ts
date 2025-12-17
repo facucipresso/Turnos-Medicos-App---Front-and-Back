@@ -69,7 +69,12 @@ export class RecepcionistaCancelarReservaComponent implements OnInit{
     this.formBusqueda = this.fb.group(
       {
         // este seria el paso 1
-        dni: ['', [Validators.pattern('^[0-9]{7,8}$')]],
+        //dni: ['', [Validators.pattern('^[0-9]{7,8}$')]],
+        dni: ['', [
+          Validators.pattern('^[0-9]*$'),      // SOLO números
+          Validators.minLength(7),
+          Validators.maxLength(8)
+        ]],
         nombrePaciente: [''],
         apellidoPaciente: [''],
 

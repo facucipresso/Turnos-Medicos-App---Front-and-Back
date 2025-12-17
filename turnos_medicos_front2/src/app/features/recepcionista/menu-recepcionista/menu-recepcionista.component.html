@@ -1,10 +1,9 @@
 <mat-toolbar color="primary" class="navbar">
     <a mat-button [routerLink]="['/recepcionista', recepcionistaId, 'reservas']" routerLinkActive="active">Reservar Turno</a>
     <a mat-button [routerLink]="['/recepcionista', recepcionistaId, 'reservas', 'cancelar']" routerLinkActive="active">Cancelar reserva</a>
-    <a mat-button [routerLink]="['/recepcionista', recepcionistaId, 'pacientes', 'nuevo']" routerLinkActive="active">Registrar Paciente</a>
-  
+    <!--<a mat-button [routerLink]="['/recepcionista', recepcionistaId, 'pacientes', 'nuevo']" routerLinkActive="active">Registrar Paciente</a>-->    
+    <a mat-button [routerLink]="['/recepcionista', recepcionistaId, 'registro']" routerLinkActive="active">Registrar Paciente</a>
     <span class="spacer"></span>
-  
     <a mat-button routerLink="/login">Cerrar Sesión</a>
   </mat-toolbar>
   

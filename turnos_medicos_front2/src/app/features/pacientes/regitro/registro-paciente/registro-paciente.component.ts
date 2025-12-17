@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PacienteService } from '../../paciente.service';
 import { UsuarioRequest } from '../../../Usuarios/usuario-request.model';
@@ -26,19 +26,26 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './registro-paciente.component.html',
   styleUrls: ['./registro-paciente.component.css']
 })
-export class RegistroPacienteComponent {
+export class RegistroPacienteComponent implements OnInit{
+
+  origen!: 'PACIENTE' | 'ADMIN' | 'RECEPCIONISTA';
 
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private pacienteService: PacienteService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ){
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.origen = this.route.snapshot.data['origen'];
   }
 
   registrar() {
@@ -55,9 +62,18 @@ export class RegistroPacienteComponent {
     this.pacienteService.registrarUsuario(usuario).subscribe({
       next: (res) => {
         const usuarioId = res.idUsuario;
-        const token = res.token;
-        localStorage.setItem('token', token);
-        this.router.navigate(['/pacientes/nuevo', usuarioId]);
+        if(this.origen == 'RECEPCIONISTA'){
+          const idRecepcionista = this.route.parent?.snapshot.paramMap.get('id_recepcionista');
+          this.router.navigate(['/recepcionista',idRecepcionista,'pacientes','nuevo',usuarioId]);
+          //no guardo el token
+          //this.router.navigate(['/pacientes/nuevo', usuarioId]);
+        }
+        else{
+          const token = res.token;
+          localStorage.setItem('token', token);
+          this.router.navigate(['/pacientes/nuevo', usuarioId]);
+        }
+
       },
       error: (err) => {
         if (err.status === 400) {

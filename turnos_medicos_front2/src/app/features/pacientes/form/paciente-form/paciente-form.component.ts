@@ -19,10 +19,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class PacienteFormComponent implements OnInit{
 
+  origen!: 'PACIENTE' | 'ADMIN' | 'RECEPCIONISTA';
+
   form: FormGroup;
   pacienteId !: number;
   usuarioId !: number;
   administradorId !: number;
+  recepcionistaId!: number;
   modoEdicion = false;
 
   constructor(
@@ -41,6 +44,26 @@ export class PacienteFormComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    //aca es donde valido si es el recepcionista quien esta viniendo aca
+/*     this.origen = this.route.snapshot.data['origen'];
+
+    if (this.origen === 'RECEPCIONISTA') {
+      const idRec = this.route.parent?.snapshot.paramMap.get('id_recepcionista');
+      if (idRec) {
+        this.recepcionistaId = Number(idRec);
+      }
+    } */
+
+      const recepcionistaIdParam =
+      this.route.parent?.snapshot.paramMap.get('id_recepcionista');
+  
+      if (recepcionistaIdParam) {
+        this.origen = 'RECEPCIONISTA';
+        this.recepcionistaId = Number(recepcionistaIdParam);
+      } else {
+        this.origen = 'PACIENTE'; // o ADMIN según lo que quieras
+      }
+
     /* si toma el id_usuario, quiere decir que esta en modo creacion, cuando se registra el usuario
        cuando toma id solo ya es el id del paciente, por lo cual esta en modo edicion
        me falta toma el id_administrador para poder completar la ruta*/
@@ -119,6 +142,11 @@ export class PacienteFormComponent implements OnInit{
       }
       this.pacienteService.addPaciente(paciente).subscribe({
         next: (res) => {
+          if(this.origen == 'RECEPCIONISTA'){
+            console.log('Paciente creado: ', res);
+            this.router.navigate(['recepcionista', this.recepcionistaId, 'reservas']);//pero de donde saco el id del recepcionista????
+            return;
+          }
           console.log('Paciente creado: ', res);
           this.router.navigate(['paciente',res.id]);
         },

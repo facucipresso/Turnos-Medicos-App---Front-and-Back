@@ -115,7 +115,8 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'reservas', pathMatch: 'full' },
           { path: 'reservas', component: RecepcionistaReservarTurnoComponent },
-          { path: 'pacientes/nuevo', component: PacienteFormComponent },
+          { path: 'registro', component: RegistroPacienteComponent, data: { origen: 'RECEPCIONISTA' } },
+          { path: 'pacientes/nuevo/:id_usuario', component: PacienteFormComponent, data: { origen: 'RECEPCIONISTA' } },
           { path: 'reservas/cancelar', component: RecepcionistaCancelarReservaComponent }
 
         ]

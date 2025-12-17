@@ -78,6 +78,12 @@ export class RecepcionistaReservarTurnoComponent implements OnInit {
     this.paso1Form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{7,8}$')]],
+      /* dni: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]*$'),      // SOLO números
+        Validators.minLength(7),
+        Validators.maxLength(8)
+      ]], */
       obraSocialId: ['', Validators.required],
       especialidadId: ['', Validators.required], //esto es para el paso 2
       medicoId: ['']

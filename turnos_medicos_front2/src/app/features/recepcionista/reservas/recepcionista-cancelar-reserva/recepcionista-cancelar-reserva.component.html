@@ -1,6 +1,6 @@
 <div class="form-wrapper">
 
-    <h2> Cancelar Reservar de Turno</h2>
+    <h2> Cancelar Reserva de Turno</h2>
 
     <form [formGroup]="formBusqueda" class="reserva-form">
 
@@ -8,8 +8,18 @@
         <mat-form-field appearance="outline" class="full-width">
         <mat-label>DNI del Paciente</mat-label>
         <input matInput formControlName="dni" />
-        <mat-error *ngIf="formBusqueda.get('dni')?.hasError('pattern')">
+        <!-- <mat-error *ngIf="formBusqueda.get('dni')?.hasError('pattern')">
             El DNI debe tener 7 u 8 números
+        </mat-error> -->
+        <mat-error *ngIf="formBusqueda.get('dni')?.hasError('pattern')">
+          El DNI solo puede contener números
+        </mat-error>
+        
+        <mat-error *ngIf="
+          formBusqueda.get('dni')?.hasError('minlength') ||
+          formBusqueda.get('dni')?.hasError('maxlength')
+        ">
+          El DNI debe tener 7 u 8 números
         </mat-error>
         </mat-form-field>
     

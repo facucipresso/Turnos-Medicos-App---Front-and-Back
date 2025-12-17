@@ -17,7 +17,7 @@ public class PacienteController {
     PacienteService pacienteService;
 
     //el paciente se hace una cuenta
-    @PreAuthorize("hasAnyRole('PACIENTE')")
+    @PreAuthorize("hasAnyRole('PACIENTE', 'RECEPCIONISTA')")
     @PostMapping("/singin/create-paciente")
     public PacienteDto createPaciente(@RequestBody PacienteDto pacienteDto){
         return pacienteService.cretePaciente(pacienteDto);
