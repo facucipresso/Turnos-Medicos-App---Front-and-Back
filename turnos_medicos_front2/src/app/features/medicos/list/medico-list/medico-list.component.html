@@ -16,6 +16,11 @@
 
   </div>
 
+  <p *ngIf="noResultadosBusqueda" class="sin-datos">
+    No se encontró un médico con los datos ingresados.
+  </p>
+
+
   <p *ngIf="medicos.length === 0" class="sin-datos">No hay médicos registrados</p>
 
   <table mat-table [dataSource]="medicosFiltrados" class="mat-elevation-z2 medico-table"
@@ -77,16 +82,19 @@
         <button mat-icon-button color="warn" (click)="eliminarMedico(med.id)" matTooltip="Eliminar">
           <mat-icon>delete</mat-icon>
         </button>
-        
+
         <button mat-icon-button color="primary" (click)="editMedico(med.id)" matTooltip="Editar">
           <mat-icon>edit</mat-icon>
         </button>
-        
+
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['nombre', 'matricula','dni','email' ,'especialidades', 'obrassociales', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['nombre', 'matricula', 'dni','email', 'especialidades','obrassociales', 'acciones'];"></tr>
+    <tr mat-header-row
+      *matHeaderRowDef="['nombre', 'matricula','dni','email' ,'especialidades', 'obrassociales', 'acciones']"></tr>
+    <tr mat-row
+      *matRowDef="let row; columns: ['nombre', 'matricula', 'dni','email', 'especialidades','obrassociales', 'acciones'];">
+    </tr>
 
   </table>
 </div>

@@ -37,6 +37,8 @@ export class MedicoListComponent implements OnInit {
   especialidades: Especialidad[] = [];
   medicosObrasSociales: any[] = []; // aca voy a guardar los id de los medicos y las obras sociales
   administradorId!: number;
+  noResultadosBusqueda = false;
+
 
   constructor(
     private medicoService: MedicosService,
@@ -135,11 +137,12 @@ export class MedicoListComponent implements OnInit {
 this.router.navigate(['editar'], { relativeTo: this.route });
   } 
 
-  filtrarMedicos(valor: string): void {
+filtrarMedicos(valor: string): void {
   const filtro = valor.trim().toLowerCase();
 
   if (!filtro) {
     this.medicosFiltrados = this.medicos;
+    this.noResultadosBusqueda = false;
     return;
   }
 
@@ -147,7 +150,11 @@ this.router.navigate(['editar'], { relativeTo: this.route });
     med.matricula.toLowerCase().includes(filtro) ||
     med.apellido.toLowerCase().includes(filtro)
   );
+
+  // 👇 si hay médicos pero el filtro no devuelve nada
+  this.noResultadosBusqueda = this.medicosFiltrados.length === 0;
 }
+
 
 existeTurnoReservadoParaMedico(turnos: any[], medicoId: number): boolean {
   return turnos.some(
