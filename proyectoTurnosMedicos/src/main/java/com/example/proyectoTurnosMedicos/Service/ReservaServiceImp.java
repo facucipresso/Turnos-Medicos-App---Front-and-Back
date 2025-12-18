@@ -166,16 +166,16 @@ public class ReservaServiceImp implements ReservaService{
         Paciente pac = new Paciente();
 
         Medico med = medicoRepository.findByNombreAndApellido(res.getNombreMedico(), res.getApellidoMedico())
-                .orElseThrow(()->new ResourceNotFoundException("Medico no encontrado"));
+                .orElseThrow(()->new ResourceNotFoundException("MEDICO_NO_ENCONTRADO"));
 
         if(res.getApellidoPaciente() == null && res.getNombrePaciente() == null){
             pac = pacienteRepository.findByDni(res.getDni())
-                    .orElseThrow(()-> new ResourceNotFoundException("Paciente no encontrado"));
+                    .orElseThrow(()-> new ResourceNotFoundException("PACIENTE_NO_ENCONTRADO"));
         }
 
         if(res.getDni() == null){
             pac = pacienteRepository.findByNombreAndApellido(res.getNombrePaciente(), res.getApellidoPaciente())
-                    .orElseThrow(()->new ResourceNotFoundException("Paciente no encontrado"));
+                    .orElseThrow(()->new ResourceNotFoundException("PACIENTE_NO_ENCONTRADO"));
         }
 
 

@@ -218,8 +218,10 @@ export class RecepcionistaCancelarReservaComponent implements OnInit{
           'Cerrar',
           { duration: 4000 }
         ); */
-
+        
+        //si es que no llega a existir una reserva con esos datos ingresados
         if (err.status === 404 && err.error?.message) {
+          if(err.error.message == 'PACIENTE_NO_RESERVA_FECHA_MEDICO'){
             // Error controlado desde el backend
             this.snackBar.open(
               "No se encontró ninguna reserva de turno con los datos ingresados.",
@@ -229,8 +231,25 @@ export class RecepcionistaCancelarReservaComponent implements OnInit{
                 panelClass: ['snackbar-error']
               }
             );
-          
-          
+          }else if(err.error.message == 'MEDICO_NO_ENCONTRADO'){
+            this.snackBar.open(
+              "Medico inexistente.",
+              'Cerrar',
+              {
+                duration: 50000,
+                panelClass: ['snackbar-error']
+              }
+            );
+          }else if(err.error.message == 'PACIENTE_NO_ENCONTRADO'){
+            this.snackBar.open(
+              "Paciente inexistente.",
+              'Cerrar',
+              {
+                duration: 50000,
+                panelClass: ['snackbar-error']
+              }
+            );
+          }
         } else {
           // Error genérico (500, network, etc)
           this.snackBar.open(
